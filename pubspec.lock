@@ -131,6 +131,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  naver_map_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "2c876690b7777e7d026e29a9492bf38bfe98441a"
+      url: "https://github.com/EonEon2/naver_map_plugin.git"
+    source: git
+    version: "0.9.7"
   path:
     dependency: transitive
     description:
