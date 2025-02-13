@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
-
-import '../utils/navermap_util.dart';  // navermap_util 임포트
+import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
 
 class JobPostings_page extends StatefulWidget {
   @override
@@ -18,6 +16,7 @@ class _JobPostingsState extends State<JobPostings_page> {
   @override
   void initState() {
     super.initState();
+    navermap_util.initializeNaverMap(); // NaverMap 초기화
     _fetchJobPosting(); // 직업 공고 가져오기
   }
 
@@ -45,7 +44,7 @@ class _JobPostingsState extends State<JobPostings_page> {
             Container(
               height: 400, // 원하는 높이 설정
               width: MediaQuery.of(context).size.width, // 화면 너비 맞추기
-              child: NaverMapWidget(),
+              child: navermap_util.buildNaverMap(), // NaverMapWidget 사용
             ),
             SizedBox(height: 20),
             // 직업 공고 목록
@@ -60,8 +59,7 @@ class _JobPostingsState extends State<JobPostings_page> {
                   ],
                   rows: jobPlaceList.map((job) {
                     TextStyle fontsize = TextStyle(fontSize: 12);
-                    return
-                      DataRow(cells: [
+                    return DataRow(cells: [
                       DataCell(Text(job.jpname, style: fontsize)),
                       DataCell(Text(job.wroadAddress ?? '주소 없음', style: fontsize)),
                       DataCell(Text("${job.jphourlyRate}원", style: fontsize)),
