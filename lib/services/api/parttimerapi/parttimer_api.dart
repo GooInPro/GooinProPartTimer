@@ -1,59 +1,78 @@
-// import 'package:http/http.dart' as http;
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'dart:convert';
-// import '../../../models/parttimer/parttimer_model.dart';
-//
-// class PartTimerApi {
-//   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
-//
-//   // 개인정보 조회
-//   Future<PartTimer> getPartTimerDetail(int pno) async {
-//     try {
-//       final response = await http.get(
-//         Uri.parse('$baseUrl/part/detail?pno=$pno'),
-//       );
-//
-//       if (response.statusCode == 200) {
-//         final decodedResponse = utf8.decode(response.bodyBytes);
-//         final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
-//         return PartTimer.fromJson(jsonResponse);
-//       } else {
-//         throw Exception('Failed to load parttimer info: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       throw Exception('Error fetching parttimer info: $e');
-//     }
-//   }
-//
-//   // 개인정보 수정
-//   Future<void> editPartTimerInfo(int pno, PartTimer partTimer) async {
-//     try {
-//       final response = await http.put(
-//         Uri.parse('$baseUrl/part/edit?pno=$pno'),
-//         headers: {'Content-Type': 'application/json'},
-//         body: json.encode(partTimer.toJson()),
-//       );
-//
-//       if (response.statusCode != 200) {
-//         throw Exception('Failed to update parttimer info: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       throw Exception('Error updating parttimer info: $e');
-//     }
-//   }
-//
-//   // 계정 삭제
-//   Future<void> deactivateAccount(int pno) async {
-//     try {
-//       final response = await http.put(
-//         Uri.parse('$baseUrl/part/account/deactivate?pno=$pno'),
-//       );
-//
-//       if (response.statusCode != 200) {
-//         throw Exception('Failed to deactivate account: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       throw Exception('Error deactivating account: $e');
-//     }
-//   }
-// }
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import '../../../models/parttimer/parttimer_model.dart';
+
+class PartTimerApi {
+  final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
+
+  // 개인정보 조회
+  Future<PartTimer> getPartTimerDetail(int pno) async {
+    try {
+      print('API 서버 주소: $baseUrl'); // API 호스트 확인
+      final apiUrl = '$baseUrl/part/detail?pno=$pno';
+      print('요청 URL: $apiUrl'); // 요청 URL 확인
+
+      final response = await http.get(Uri.parse(apiUrl));
+
+      print('응답 상태 코드: ${response.statusCode}'); // 응답 상태 코드 확인
+      print('응답 데이터: ${response.body}'); // 응답 데이터 확인
+
+      if (response.statusCode == 200) {
+        final decodedResponse = utf8.decode(response.bodyBytes);
+        print('디코딩된 응답 데이터: $decodedResponse'); // 디코딩된 응답 확인
+        final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
+        return PartTimer.fromJson(jsonResponse);
+      } else {
+        throw Exception('파트타이머 정보 로드 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e'); // 에러 상세 내용 확인
+      throw Exception('파트타이머 정보 조회 중 오류 발생: $e');
+    }
+  }
+
+  // 개인정보 수정
+  Future<void> editPartTimerInfo(int pno, PartTimer partTimer) async {
+    try {
+      final apiUrl = '$baseUrl/part/edit?pno=$pno';
+      print('요청 URL: $apiUrl');
+
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(partTimer.toJson()),
+      );
+
+      print('응답 상태 코드: ${response.statusCode}');
+
+      if (response.statusCode != 200) {
+        throw Exception('파트타이머 정보 수정 실패: ${response.statusCode}');
+      }
+      print('파트타이머 정보 수정 성공');
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e');
+      throw Exception('파트타이머 정보 수정 중 오류 발생: $e');
+    }
+  }
+
+  // 계정 삭제
+  Future<void> deactivateAccount(int pno) async {
+    try {
+      final apiUrl = '$baseUrl/part/account/deactivate?pno=$pno';
+      print('요청 URL: $apiUrl');
+
+      final response = await http.put(Uri.parse(apiUrl));
+
+      print('응답 상태 코드: ${response.statusCode}');
+
+      if (response.statusCode != 200) {
+        throw Exception('계정 비활성화 실패: ${response.statusCode}');
+      }
+      print('계정 비활성화 성공');
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e');
+      throw Exception('계정 비활성화 중 오류 발생: $e');
+    }
+  }
+}
