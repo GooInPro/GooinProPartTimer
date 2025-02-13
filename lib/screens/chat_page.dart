@@ -23,13 +23,14 @@ class _ChatPageState extends State<ChatPage> {
   StompClient? _stompClient;
   late String _user;
   late String _roomId;
+  late DateTime _timestamp;
 
   @override
   void initState() {
 
     super.initState();
 
-    _user = "test7@email.com";
+    _user = "test23@email.com";
     _roomId = "67a2fdf8207c437b9f394653";
 
     _connectWebSocket();
@@ -37,7 +38,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _connectWebSocket() {
 
-    final socketUrl = "ws://10.10.10.109:8080/ws";
+    final socketUrl = "ws://localhost:8080/ws";
     final client = StompClient(
         config: StompConfig(
           url: socketUrl,
@@ -71,6 +72,7 @@ class _ChatPageState extends State<ChatPage> {
             _messages.insert(0, {
               "text": messageData["message"], // 'message' 필드만 사용
               "isMe": messageData["senderEmail"] == _user, // 내가 보낸 메시지인지 확인
+              "timestamp": messageData["timestamp"],
             });
           });
         }
@@ -132,6 +134,7 @@ class _ChatPageState extends State<ChatPage> {
                 return ChatMessage(
                   message: _messages[index]["text"],
                   isMe: _messages[index]["isMe"],
+                  timestamp: DateTime.parse(_messages[index]["timestamp"]),
                 );
               }
             )
