@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 
 class navermap_util {
@@ -16,5 +17,19 @@ class navermap_util {
 
   static Future<NaverMapController> getController() async {
     return _controller.future;
+  }
+}
+
+class NaverMapWidget extends StatelessWidget { // 위치설정
+  const NaverMapWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return NaverMap(
+        initialCameraPosition: CameraPosition(
+            target: LatLng(35.1796, 129.0746)
+        ),
+      onMapCreated: navermap_util.onMapCreated,
+    );
   }
 }

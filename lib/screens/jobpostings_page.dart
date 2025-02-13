@@ -45,9 +45,7 @@ class _JobPostingsState extends State<JobPostings_page> {
             Container(
               height: 400, // 원하는 높이 설정
               width: MediaQuery.of(context).size.width, // 화면 너비 맞추기
-              child: NaverMap(
-                onMapCreated: navermap_util.onMapCreated,
-              ),
+              child: NaverMapWidget(),
             ),
             SizedBox(height: 20),
             // 직업 공고 목록

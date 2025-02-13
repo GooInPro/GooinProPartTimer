@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gooinpro_parttimer/screens/in_out_page.dart';
 import 'package:gooinpro_parttimer/screens/jobpostings_page.dart';
 
 void main() async {
@@ -18,7 +19,7 @@ class _MyAppState extends State<MyApp> {
 
   final List<Widget> _pages = [
     JobPostings_page(),
-    Center(child: Text('In-Out Page')),
+    in_out_page(),
     Center(child: Text('Chatting Page')),
     Center(child: Text('Profile Page')),
   ];
