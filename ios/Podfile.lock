@@ -1,13 +1,14 @@
 PODS:
   - Flutter (1.0.0)
-  - geolocator_apple (1.2.0):
+  - flutter_naver_map (1.3.0):
     - Flutter
-  - naver_map_plugin (0.9.4):
-    - Flutter
-    - NMapsMap
+    - NMapsMap (= 3.19.0)
   - NMapsGeometry (1.0.2)
-  - NMapsMap (3.20.0):
+  - NMapsMap (3.19.0):
     - NMapsGeometry
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -16,8 +17,8 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
-  - naver_map_plugin (from `.symlinks/plugins/naver_map_plugin/ios`)
+  - flutter_naver_map (from `.symlinks/plugins/flutter_naver_map/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
@@ -29,10 +30,10 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  geolocator_apple:
-    :path: ".symlinks/plugins/geolocator_apple/ios"
-  naver_map_plugin:
-    :path: ".symlinks/plugins/naver_map_plugin/ios"
+  flutter_naver_map:
+    :path: ".symlinks/plugins/flutter_naver_map/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
@@ -40,10 +41,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
-  naver_map_plugin: b6eb0eb7e8d58d22d3c42ae43755cdd6c0894027
+  flutter_naver_map: b7ccf21ee350a34381ec92d0bfdad1e8714af9bc
   NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
-  NMapsMap: bc5ea361ba29fc7c83dd8998f4497a77c75b4c66
+  NMapsMap: 99c10429d93340780b6f88d3fc7c0a3850b43664
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 

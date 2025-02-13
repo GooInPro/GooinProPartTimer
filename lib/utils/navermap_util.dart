@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+
+
+final String? naver_client_id = dotenv.env['NAVER_CLIENT_ID'];
 
 class navermap_util {
   static Completer<NaverMapController> _controller = Completer();
 
+
   // NaverMap SDK 초기화
   static Future<void> initializeNaverMap() async {
-    await NaverMapSdk.instance.initialize(clientId: 'kwmvewdvkr');
+    await NaverMapSdk.instance.initialize(clientId: naver_client_id);
     print("NaverMap Initialized");
   }
 
