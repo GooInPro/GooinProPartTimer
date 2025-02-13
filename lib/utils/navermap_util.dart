@@ -1,20 +1,35 @@
 import 'dart:async';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 class navermap_util {
   static Completer<NaverMapController> _controller = Completer();
 
+  // NaverMap SDK 초기화
   static Future<void> initializeNaverMap() async {
-    // 추가적인 초기화 로직이 필요하면 여기에 작성
+    await NaverMapSdk.instance.initialize(clientId: 'kwmvewdvkr');
     print("NaverMap Initialized");
   }
 
+  // Map이 생성된 후 호출되는 콜백 함수
   static void onMapCreated(NaverMapController controller) {
     if (_controller.isCompleted) _controller = Completer();
     _controller.complete(controller);
   }
 
+  // NaverMapController 반환
   static Future<NaverMapController> getController() async {
     return _controller.future;
+  }
+
+  static Widget buildNaverMap() {
+    return NaverMap(
+      options: NaverMapViewOptions(
+        initialCameraPosition: NCameraPosition(
+          target: NLatLng(35.1796, 129.0746), // 초기 위치 설정
+          zoom: 10.0, // 초기 확대 비율
+        ),
+      ),
+    );
   }
 }
