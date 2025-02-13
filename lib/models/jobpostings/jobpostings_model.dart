@@ -39,4 +39,5 @@ class JobPosting {
           : null,
     );
   }
+
 }

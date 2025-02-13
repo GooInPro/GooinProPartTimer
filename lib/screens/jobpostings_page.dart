@@ -17,6 +17,7 @@ class _JobPostingsState extends State<JobPostings_page> {
   void initState() {
     super.initState();
     navermap_util.initializeNaverMap(); // NaverMap 초기화
+    print("초기화");
     _fetchJobPosting(); // 직업 공고 가져오기
   }
 
@@ -27,6 +28,17 @@ class _JobPostingsState extends State<JobPostings_page> {
       setState(() {
         jobPlaceList = jobList;
         _isLoading = false; // 로딩 완료
+        print("--------!!!_____");
+        jobList.forEach((job) {
+          double? wlati = job.wlati;
+          double? wlong = job.wlong;
+          String? jpname = job.jpname;
+
+          // wlati와 wlong이 null이 아닌 경우에만 addMarker 호출
+          if (wlati != null && wlong != null) {
+            navermap_util.addMarker(wlati, wlong, jpname ?? '직업 공고');
+          }
+        });
       });
     }
   }

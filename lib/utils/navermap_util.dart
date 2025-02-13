@@ -27,14 +27,29 @@ class navermap_util {
     return _controller.future;
   }
 
+  static Future<void> addMarker(double wlati, double wlong, String jpname) async {
+    print("addmarker -------");
+    print(wlati);
+    NaverMapController controller = await getController();
+
+    final marker = NMarker(
+      id: '$jpname-${DateTime.now().millisecondsSinceEpoch}',
+      position: NLatLng(wlati, wlong),
+    );
+    print(marker);
+    await controller.addOverlay(marker);
+
+  }
+
   static Widget buildNaverMap() {
     return NaverMap(
       options: NaverMapViewOptions(
         initialCameraPosition: NCameraPosition(
-          target: NLatLng(35.1796, 129.0746), // 초기 위치 설정
-          zoom: 10.0, // 초기 확대 비율
+          target: NLatLng(35.165949, 129.132658), // 초기 위치 설정
+          zoom: 15.0, // 초기 확대 비율
         ),
       ),
+      onMapReady: onMapCreated,
     );
   }
 }
