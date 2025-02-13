@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
 import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
@@ -71,11 +72,27 @@ class _JobPostingsState extends State<JobPostings_page> {
                   ],
                   rows: jobPlaceList.map((job) {
                     TextStyle fontsize = TextStyle(fontSize: 12);
-                    return DataRow(cells: [
-                      DataCell(Text(job.jpname, style: fontsize)),
-                      DataCell(Text(job.wroadAddress ?? '주소 없음', style: fontsize)),
-                      DataCell(Text("${job.jphourlyRate}원", style: fontsize)),
-                    ]);
+
+                    void navigateToDetail() {
+                      context.go('/jobPosting/${job.jpno}');
+                    }
+
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          Text(job.jpname, style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                        DataCell(
+                          Text(job.wroadAddress ?? '주소 없음', style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                        DataCell(
+                          Text("${job.jphourlyRate}원", style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                      ],
+                    );
                   }).toList(),
                 ),
               ),

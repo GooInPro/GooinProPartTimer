@@ -30,4 +30,27 @@ class jobpostings_api {
       throw Exception('Error fetching workplace list: $e');
     }
   }
+
+  Future<List<JobPostingDetail>> getJobPostingsDetail(int jpno) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/jobposting/detail/$jpno'));
+
+      if (response.statusCode == 200) {
+        final String decodedResponse = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
+
+        print(jsonResponse);
+
+        final List<dynamic> data = jsonResponse['dtoList'] ?? []; // `dtoList`가 없으면 빈 리스트 반환
+        return data.map((item) => JobPostingDetail.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load job posting detail: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching job posting detail: $e');
+      return []; // **오류 발생 시 빈 리스트 반환**
+    }
+  }
+
+
 }

@@ -41,3 +41,41 @@ class JobPosting {
   }
 
 }
+
+class JobPostingDetail {
+  final int jpno;
+  final String jpname;
+  final String? wroadAddress;
+  final String? wdetailAddress;
+  final int jphourlyRate;
+  final String? jpworkDays;
+  final String? jpenddate;
+  final DateTime jpworkStartTime;
+  final DateTime jpworkEndTime;
+
+  JobPostingDetail({
+    required this.jpno,
+    required this.jpname,
+    this.wroadAddress,
+    this.wdetailAddress,
+    required this.jphourlyRate,
+    this.jpworkDays,
+    this.jpenddate,
+    required this.jpworkStartTime,
+    required this.jpworkEndTime,
+  });
+
+  factory JobPostingDetail.fromJson(Map<String, dynamic> json) {
+    return JobPostingDetail(
+      jpno: json['jpno'],
+      jpname: json['jpname'],
+      wroadAddress: json['wroadAddress'],
+      wdetailAddress: json['wdetailAddress'],
+      jphourlyRate: json['jphourlyRate'],
+      jpworkDays: json['jpworkDays'],
+      jpenddate: json['jpenddate'],
+      jpworkStartTime: DateTime.parse(json['jpworkStartTime']),
+      jpworkEndTime: DateTime.parse(json['jpworkEndTime']),
+    );
+  }
+}
