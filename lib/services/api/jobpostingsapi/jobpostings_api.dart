@@ -40,9 +40,9 @@ class jobpostings_api {
         final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
 
         print(jsonResponse);
+        final JobPostingDetail jobDetail = JobPostingDetail.fromJson(jsonResponse);
 
-        final List<dynamic> data = jsonResponse['dtoList'] ?? []; // `dtoList`가 없으면 빈 리스트 반환
-        return data.map((item) => JobPostingDetail.fromJson(item)).toList();
+        return [jobDetail];
       } else {
         throw Exception('Failed to load job posting detail: ${response.statusCode}');
       }

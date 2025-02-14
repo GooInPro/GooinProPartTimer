@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class JobPosting {
   final int jpno;
   final int? wpno;
@@ -50,8 +52,8 @@ class JobPostingDetail {
   final int jphourlyRate;
   final String? jpworkDays;
   final String? jpenddate;
-  final DateTime jpworkStartTime;
-  final DateTime jpworkEndTime;
+  final TimeOfDay jpworkStartTime;
+  final TimeOfDay jpworkEndTime;
 
   JobPostingDetail({
     required this.jpno,
@@ -74,8 +76,32 @@ class JobPostingDetail {
       jphourlyRate: json['jphourlyRate'],
       jpworkDays: json['jpworkDays'],
       jpenddate: json['jpenddate'],
-      jpworkStartTime: DateTime.parse(json['jpworkStartTime']),
-      jpworkEndTime: DateTime.parse(json['jpworkEndTime']),
+      jpworkStartTime: _parseTime(json['jpworkStartTime']),
+      jpworkEndTime: _parseTime(json['jpworkEndTime']),
     );
   }
+
+  static TimeOfDay _parseTime(String timeString) {
+      final parts = timeString.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    }
+
+  static List<String> workDays(String jpworkDays) {
+    List<String> days = [];
+    List<String> weekDays = ['월', '화', '수', '목', '금', '토', '일'];
+
+    if (jpworkDays.length != 7) {
+      print("no data");
+    }
+
+    for (int i = 0; i < jpworkDays.length; i++) {
+      if (jpworkDays[i] == '1') {
+        days.add(weekDays[i]);
+      }
+    }
+    return days;
+  }
 }
+

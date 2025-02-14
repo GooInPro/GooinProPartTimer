@@ -29,7 +29,6 @@ class _JobPostingsState extends State<JobPostingsPage> {
       setState(() {
         jobPlaceList = jobList;
         _isLoading = false; // 로딩 완료
-        print("--------!!!_____");
         jobList.forEach((job) {
           double? wlati = job.wlati;
           double? wlong = job.wlong;
