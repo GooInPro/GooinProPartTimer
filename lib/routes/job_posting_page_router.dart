@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:gooinpro_parttimer/screens/jobpostings_detail_page.dart';
-import '../screens/jobpostings_page.dart';
+import 'package:gooinpro_parttimer/screens/jobpostings_screens/jobpostings_detail_page.dart';
+import '../screens/jobpostings_screens/jobpostings_page.dart';
 
 // JobPosting 페이지 라우트 정의
 final List<GoRoute> jobPostingPageRoute = [

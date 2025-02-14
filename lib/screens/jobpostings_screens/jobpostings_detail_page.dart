@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/jobpostings/jobpostings_model.dart';
-import '../services/api/jobpostingsapi/jobpostings_api.dart';
+import '../../models/jobpostings/jobpostings_model.dart';
+import '../../services/api/jobpostingsapi/jobpostings_api.dart';
 
 
 class JobPostingDetailPage extends StatefulWidget {
