@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/parttimer/parttimer_model.dart';
 import 'package:gooinpro_parttimer/services/api/parttimerapi/parttimer_api.dart';
 import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_header.dart';
 import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_section.dart';
+import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_edit.dart';
 
 class PartTimerMyInfoPage extends StatefulWidget {
   const PartTimerMyInfoPage({super.key});
@@ -41,11 +43,48 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
     }
   }
 
+  Future<void> _showEditDialog(BuildContext context) async {
+    if (_partTimer == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) =>
+          PartTimerMyInfoEdit(
+            partTimer: _partTimer!,
+            onSave: (updatedPartTimer) async {
+              try {
+                await _partTimerApi.editPartTimerInfo(
+                    tempPno, updatedPartTimer);
+                // 수정 성공 후 정보 다시 로드
+                await _loadPartTimerInfo();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('정보가 수정되었습니다.')),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('정보 수정에 실패했습니다.')),
+                  );
+                }
+              }
+            },
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('내 정보'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () => _showEditDialog(context),
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -82,6 +121,13 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
               title: '상세주소',
               content: _partTimer!.pdetailAddress,
             ),
+          const SizedBox(height: 20), // 간격 추가
+          ElevatedButton(
+            onPressed: () {
+              context.go('/parttimer/matchinglogs'); // 근무이력 페이지로 이동
+            },
+            child: const Text('근무 이력 보기'),
+          ),
         ],
       ),
     );
