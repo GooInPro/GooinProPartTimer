@@ -15,7 +15,7 @@ final GoRouter appRouter = GoRouter(
         return MainScreen(child: child);
       },
       routes: [
-        jobPostingPageRoute, // jobPostingPage 라우트
+        ...jobPostingPageRoute, // jobPostingPage 라우트
         inOutPageRoute,      // inOutPage 라우트
         chatPageRoute,   // chattingPage 라우트
         profilePageRoute,    // profilePage 라우트

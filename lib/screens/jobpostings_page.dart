@@ -5,12 +5,12 @@ import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
 import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
 
-class JobPostings_page extends StatefulWidget {
+class JobPostingsPage extends StatefulWidget {
   @override
   _JobPostingsState createState() => _JobPostingsState();
 }
 
-class _JobPostingsState extends State<JobPostings_page> {
+class _JobPostingsState extends State<JobPostingsPage> {
   bool _isLoading = true; // 로딩 상태
   List<JobPosting> jobPlaceList = [];
 
