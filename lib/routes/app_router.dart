@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gooinpro_parttimer/routes/profile_page_router.dart';
+import 'package:gooinpro_parttimer/routes/parttimer_page_router.dart';
 
 import '../widget/screen_widget/BottomBar.dart';
 import 'chatting_page_router.dart';
@@ -18,7 +18,7 @@ final GoRouter appRouter = GoRouter(
         ...jobPostingPageRoute, // jobPostingPage 라우트
         inOutPageRoute,      // inOutPage 라우트
         chatPageRoute,   // chattingPage 라우트
-        profilePageRoute,    // profilePage 라우트
+        partTimerPageRoute,
       ],
     ),
   ],
