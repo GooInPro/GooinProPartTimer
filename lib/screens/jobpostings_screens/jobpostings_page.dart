@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
 import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
 
-class JobPostings_page extends StatefulWidget {
+class JobPostingsPage extends StatefulWidget {
   @override
   _JobPostingsState createState() => _JobPostingsState();
 }
 
-class _JobPostingsState extends State<JobPostings_page> {
+class _JobPostingsState extends State<JobPostingsPage> {
   bool _isLoading = true; // 로딩 상태
   List<JobPosting> jobPlaceList = [];
 
@@ -17,6 +18,7 @@ class _JobPostingsState extends State<JobPostings_page> {
   void initState() {
     super.initState();
     navermap_util.initializeNaverMap(); // NaverMap 초기화
+    print("초기화");
     _fetchJobPosting(); // 직업 공고 가져오기
   }
 
@@ -27,6 +29,16 @@ class _JobPostingsState extends State<JobPostings_page> {
       setState(() {
         jobPlaceList = jobList;
         _isLoading = false; // 로딩 완료
+        jobList.forEach((job) {
+          double? wlati = job.wlati;
+          double? wlong = job.wlong;
+          String? jpname = job.jpname;
+
+          // wlati와 wlong이 null이 아닌 경우에만 addMarker 호출
+          if (wlati != null && wlong != null) {
+            navermap_util.addMarker(wlati, wlong, jpname ?? '직업 공고');
+          }
+        });
       });
     }
   }
@@ -59,11 +71,27 @@ class _JobPostingsState extends State<JobPostings_page> {
                   ],
                   rows: jobPlaceList.map((job) {
                     TextStyle fontsize = TextStyle(fontSize: 12);
-                    return DataRow(cells: [
-                      DataCell(Text(job.jpname, style: fontsize)),
-                      DataCell(Text(job.wroadAddress ?? '주소 없음', style: fontsize)),
-                      DataCell(Text("${job.jphourlyRate}원", style: fontsize)),
-                    ]);
+
+                    void navigateToDetail() {
+                      context.go('/jobposting/${job.jpno}');
+                    }
+
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          Text(job.jpname, style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                        DataCell(
+                          Text(job.wroadAddress ?? '주소 없음', style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                        DataCell(
+                          Text("${job.jphourlyRate}원", style: fontsize),
+                          onTap: navigateToDetail,
+                        ),
+                      ],
+                    );
                   }).toList(),
                 ),
               ),

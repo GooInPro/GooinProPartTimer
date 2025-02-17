@@ -8,7 +8,7 @@ import 'in_out_page_router.dart';
 import 'job_posting_page_router.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/jobposting',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
