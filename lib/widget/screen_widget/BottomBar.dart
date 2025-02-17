@@ -9,7 +9,7 @@ class BottomBar extends StatelessWidget {
       onTap: (index) {
         switch (index) {
           case 0:
-            context.go('/');
+            context.go('/jobposting');
             break;
           case 1:
             context.go('/inout');
@@ -18,7 +18,7 @@ class BottomBar extends StatelessWidget {
             context.go('/chat');
             break;
           case 3:
-            context.go('/profile');
+            context.go('/parttimer');
             break;
         }
       },
@@ -37,7 +37,7 @@ class BottomBar extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/inout')) return 1;
     if (location.startsWith('/chat')) return 2;
-    if (location.startsWith('/profile')) return 3;
+    if (location.startsWith('/parttimer')) return 3;
     return 0;
   }
 }

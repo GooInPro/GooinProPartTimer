@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 import '../../../models/jobpostings/jobpostings_model.dart';
+import '../../../models/jobpostings_application/jobpostings_application_model.dart';
 
 
 class jobpostings_api {
@@ -30,4 +31,39 @@ class jobpostings_api {
       throw Exception('Error fetching workplace list: $e');
     }
   }
+
+  Future<List<JobPostingDetail>> getJobPostingsDetail(int jpno) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/jobposting/detail/$jpno'));
+
+      if (response.statusCode == 200) {
+        final String decodedResponse = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
+
+        print(jsonResponse);
+        final JobPostingDetail jobDetail = JobPostingDetail.fromJson(jsonResponse);
+
+        return [jobDetail];
+      } else {
+        throw Exception('Failed to load job posting detail: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching job posting detail: $e');
+      return []; // **오류 발생 시 빈 리스트 반환**
+    }
+  }
+
+  Future<void> addApplicationPostings(JobPostingsApplication application) async {
+
+    final url = Uri.parse('$baseUrl/jobpostingapplication/add');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'}, // JSON 헤더 추가
+      body: jsonEncode(application.toJson()), // 모델을 JSON으로 변환하여 body에 넣기
+    );
+
+  }
+
+
 }
