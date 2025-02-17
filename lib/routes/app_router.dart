@@ -8,14 +8,14 @@ import 'in_out_page_router.dart';
 import 'job_posting_page_router.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/jobposting',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
         return MainScreen(child: child);
       },
       routes: [
-        ...jobPostingPageRoute, // jobPostingPage 라우트
+        jobPostingPageRoute, // jobPostingPage 라우트
         inOutPageRoute,      // inOutPage 라우트
         chatPageRoute,   // chattingPage 라우트
         partTimerPageRoute,

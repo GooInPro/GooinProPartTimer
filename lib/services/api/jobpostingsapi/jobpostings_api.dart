@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 import '../../../models/jobpostings/jobpostings_model.dart';
+import '../../../models/jobpostings_application/jobpostings_application_model.dart';
 
 
 class jobpostings_api {
@@ -50,6 +51,18 @@ class jobpostings_api {
       print('Error fetching job posting detail: $e');
       return []; // **오류 발생 시 빈 리스트 반환**
     }
+  }
+
+  Future<void> addApplicationPostings(JobPostingsApplication application) async {
+
+    final url = Uri.parse('$baseUrl/jobpostingapplication/add');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'}, // JSON 헤더 추가
+      body: jsonEncode(application.toJson()), // 모델을 JSON으로 변환하여 body에 넣기
+    );
+
   }
 
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/jobpostings/jobpostings_model.dart';
 import '../../services/api/jobpostingsapi/jobpostings_api.dart';
@@ -36,13 +37,17 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
     }
   }
 
+  void _onApplyButtonPressed() {
+    // 버튼 클릭 시 실행할 로직을 추가할 수 있습니다.
+    context.go('/jobposting/application/register', extra: widget.jpno);
+    // 예: 구직 신청 API 호출 등
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // 간단한 화면 표시 (라우터 테스트용)
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Job Posting Detail'),
-      ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator()) // 로딩 중일 때
           : Center(
@@ -92,6 +97,18 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
             Text(
               '근무 종료 시간: ${jobDetailList[0].jpworkEndTime.format(context)}',
               style: TextStyle(fontSize: 18),
+            ),
+            ElevatedButton(
+              onPressed: _onApplyButtonPressed,
+              child: Text('지원서 작성하기'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                textStyle: TextStyle(fontSize: 18),
+                backgroundColor: Colors.blue, // 버튼 배경색
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // 둥근 모서리
+                ),
+              ),
             ),
           ],
         ),

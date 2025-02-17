@@ -73,7 +73,7 @@ class _JobPostingsState extends State<JobPostingsPage> {
                     TextStyle fontsize = TextStyle(fontSize: 12);
 
                     void navigateToDetail() {
-                      context.go('/jobPosting/${job.jpno}');
+                      context.go('/jobposting/${job.jpno}');
                     }
 
                     return DataRow(
