@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/widget/chat_widgets/chat_message.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
-import '../widget/chat_widgets/chat_input.dart';
+import '../../widget/chat_widgets/chat_input.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+
+  final String email;
+  final String id;
+
+  const ChatPage({Key? key, required this.email, required this.id}) : super(key: key);
 
 
   @override
