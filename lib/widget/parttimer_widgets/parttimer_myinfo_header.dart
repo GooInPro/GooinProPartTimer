@@ -13,34 +13,44 @@ class PartTimerMyInfoHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      color: Colors.blue[50],
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.blue[400]!, Colors.blue[300]!],
+        ),
+      ),
       child: Column(
         children: [
           CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.blue,
+            radius: 50,
+            backgroundColor: Colors.white,
             child: Text(
               name.substring(0, 1),
               style: const TextStyle(
-                fontSize: 24,
-                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
               ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            name,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
             email,
-            style: TextStyle(
-              color: Colors.grey[600],
+            style: const TextStyle(
               fontSize: 16,
+              color: Colors.white70,
             ),
           ),
         ],

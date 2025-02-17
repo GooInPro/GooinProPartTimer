@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import '../../../models/parttimer/parttimer_model.dart';
+import '../../../models/jobmatchings/jobmatchings_model.dart';
 
 class PartTimerApi {
   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
@@ -73,6 +74,54 @@ class PartTimerApi {
     } catch (e) {
       print('API 호출 중 오류 발생: $e');
       throw Exception('계정 비활성화 중 오류 발생: $e');
+    }
+  }
+
+  // 현재 근무지 조회
+  Future<List<JobMatchings>> getCurrentJobs(int pno) async {
+    try {
+      print('API 서버 주소: $baseUrl');
+      final apiUrl = '$baseUrl/log/current?pno=$pno';
+      print('요청 URL: $apiUrl');
+
+      final response = await http.get(Uri.parse(apiUrl));
+
+      print('응답 상태 코드: ${response.statusCode}');
+      print('응답 데이터: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes));
+        return jsonList.map((json) => JobMatchings.fromJson(json)).toList();
+      } else {
+        throw Exception('현재 근무지 목록 로드 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e');
+      throw Exception('현재 근무지 목록 조회 중 오류 발생: $e');
+    }
+  }
+
+// 과거 근무지 조회
+  Future<List<JobMatchings>> getPastJobs(int pno) async {
+    try {
+      print('API 서버 주소: $baseUrl');
+      final apiUrl = '$baseUrl/log/past?pno=$pno';
+      print('요청 URL: $apiUrl');
+
+      final response = await http.get(Uri.parse(apiUrl));
+
+      print('응답 상태 코드: ${response.statusCode}');
+      print('응답 데이터: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes));
+        return jsonList.map((json) => JobMatchings.fromJson(json)).toList();
+      } else {
+        throw Exception('과거 근무지 목록 로드 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e');
+      throw Exception('과거 근무지 목록 조회 중 오류 발생: $e');
     }
   }
 }
