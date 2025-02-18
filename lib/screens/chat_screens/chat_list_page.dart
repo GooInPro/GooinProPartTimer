@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/models/chat/chat_model.dart';
-import 'package:gooinpro_parttimer/services/api/chatroomapi/chat_api.dart';
+import 'package:gooinpro_parttimer/services/api/chatapi/chat_api.dart';
 
 import 'chat_page.dart';
 
