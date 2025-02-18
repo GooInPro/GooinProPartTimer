@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:gooinpro_parttimer/models/chat/chatroom_model.dart';
+import 'package:gooinpro_parttimer/models/chat/chat_model.dart';
 import 'package:gooinpro_parttimer/services/api/chatroomapi/chat_api.dart';
 
 import 'chat_page.dart';
@@ -17,7 +17,7 @@ class ChatListPage extends StatefulWidget {
 class _ChatListPageState extends State<ChatListPage> {
 
   bool isLoading = true;
-  List<ChatRoomList> chatRoom = [];
+  List<ChatRoomListModel> chatRoom = [];
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _ChatListPageState extends State<ChatListPage> {
 
   Future<void> _fetchChatRoomList() async {
 
-    List<ChatRoomList> chatRoomList = await chat_api().getChatRoomList(email: widget.email);
+    List<ChatRoomListModel> chatRoomList = await chat_api().getChatRoomListAPI(email: widget.email);
 
     if(mounted) {
 
