@@ -7,6 +7,7 @@ final GoRoute chatPageRoute = GoRoute(
   path: '/chat/:email',
   builder: (context, state) {
     final email = state.pathParameters['email'] ?? '';
+    print(email);
     return ChatListPage(email: email);
   },
   routes: [
@@ -15,6 +16,7 @@ final GoRoute chatPageRoute = GoRoute(
       builder: (context, state) {
         final email = state.pathParameters['email'] ?? '';
         final id = state.pathParameters['id'] ?? '';
+        print(id);
         return ChatPage(email: email, id: id);
       },
     ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/widget/chat_widgets/chat_message.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
