@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/widget/chat_widgets/chat_message.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
-
 import '../../widget/chat_widgets/chat_input.dart';
+import 'package:gooinpro_parttimer/services/api/chatapi/chat_api.dart';
 
 class ChatPage extends StatefulWidget {
 
@@ -27,16 +27,34 @@ class _ChatPageState extends State<ChatPage> {
   late String _user;
   late String _roomId;
 
+  final chat_api _chatApi = chat_api();
+
   @override
   void initState() {
 
     super.initState();
 
     //지금은 테스트용, 나중에 수정
-    _user = "test23@email.com";
-    _roomId = "67a2fdf8207c437b9f394653";
+    _user = widget.email;
+    _roomId = widget.id;
+
+    _loadPreviousMessages();
 
     _connectWebSocket();
+  }
+
+  Future<void> _loadPreviousMessages() async {
+    try {
+      final messages = await _chatApi.getChatMessagesAPI(page: 1, size: 50, roomId: _roomId);
+      setState(() {
+        _messages.insertAll(0, messages.map((msg) => {
+          "text": msg.message,
+          "isMe": msg.senderEmail == _user,
+        }).toList());
+      });
+    } catch (e) {
+      print("Failed to load previous messages: $e");
+    }
   }
 
   void _connectWebSocket() {
@@ -116,8 +134,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
 
-    super.dispose();
     _stompClient?.deactivate(); //WebSocket 연결 종료
+    super.dispose();
   }
 
   @override
