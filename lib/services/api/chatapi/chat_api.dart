@@ -34,8 +34,7 @@ class chat_api {
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes); // 응답을 UTF-8로 디코딩
-        final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
-        final List<dynamic> data = jsonResponse['dtoList']; // PageResponseDTO의 content
+        final List<dynamic> data = json.decode(decodedResponse);
 
         return data.map((item) => CHatMessageModel.fromJson(item)).toList();
       } else {
