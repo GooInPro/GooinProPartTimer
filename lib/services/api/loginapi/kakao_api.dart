@@ -24,7 +24,9 @@ class kakao_api {
         }
 
       } else {
+        print("00000000000000000");
         try { // 카카오톡이 설치되어 있지 않으면 카카오 계정으로 로그인
+          print("33333333333333333333");
           OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
           print("---------------2 login");
           print('카카오 계정 로그인 성공: ${token.accessToken}');

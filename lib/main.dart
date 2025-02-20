@@ -16,6 +16,8 @@ void main() async{
   print(javascriptAppKey);
   String apiHost = dotenv.env['API_HOST'] ?? 'No API host found';
 
+  print(await KakaoSdk.origin);
+
   KakaoSdk.init(
     nativeAppKey: nativeAppKey,
     javaScriptAppKey: javascriptAppKey

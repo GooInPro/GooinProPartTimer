@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -21,7 +21,12 @@ class _MainLoginPageState extends State<MainLoginPage> {
 
   // onPressed에서 호출되는 함수
   void handleKakaoLogin() async {
+
+      print("77777777777777");
+
       User? user = await kakaoLoginApi.kakaoLogin();
+
+      print(user);
 
       if(user != null) {
         context.go('/login/kakaore', extra: user);
