@@ -19,6 +19,10 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
+    buildFeatures {
+        buildConfig = true // buildConfig 활성화
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "org.gooinpro.gooinpro_parttimer"
@@ -28,6 +32,16 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        def envFile = rootProject.file('.env')
+        def env = new Properties()
+        if (envFile.exists()) {
+            env.load(new FileInputStream(envFile))
+        }
+
+        // ✅ .env에서 Kakao 앱 키 가져와서 BuildConfig에 추가
+        def kakaoNativeKey = env.getProperty("KAKAO_NATIVE_KEY", "")
+        resValue "string", "KAKAO_NATIVE_KEY", kakaoNativeKey
     }
 
     buildTypes {
