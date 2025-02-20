@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- naver login -->
+    <string name="client_id">hHJpThofsgbuXzxs5G9f</string>
+    <string name="client_secret">OxlQ_0PM1t</string>
+    <string name="client_name">gooinpro</string>
+
+</resources>
