@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:gooinpro_parttimer/models/login/login_model.dart';
-import 'package:gooinpro_parttimer/models/login/token_response_find_model.dart';
 
-import '../../services/api/loginapi/login_api.dart'; // LoginDataSend API 가져오기
+import '../../services/api/loginapi/login_api.dart';
+import '../../services/api/loginapi/naver_api.dart';
 
-class KakaoRedirectPage extends StatefulWidget {
+class NaverRedirectPage extends StatefulWidget {
   @override
-  _KakaoRedirectPageState createState() => _KakaoRedirectPageState();
+  _NaverRedirectPageState createState() => _NaverRedirectPageState();
 }
 
-class _KakaoRedirectPageState extends State<KakaoRedirectPage> {
+
+class _NaverRedirectPageState extends State<NaverRedirectPage> {
   bool _isLoading = true;
 
   @override
@@ -30,7 +32,6 @@ class _KakaoRedirectPageState extends State<KakaoRedirectPage> {
     }
   }
 
-  // Login API 호출 함수
   Future<void> _sendLoginData(Login loginuser) async {
     try {
       final loginApi = login_api();
@@ -47,7 +48,7 @@ class _KakaoRedirectPageState extends State<KakaoRedirectPage> {
       }
     } catch (e) {
       // API 호출 실패 시 처리
-      print('API 호출 실패 kakao reidrect page: $e');
+      print('API 호출 실패 naver reidrect page: $e');
     } finally {
       setState(() {
         _isLoading = false;  // API 호출 완료 후 로딩 종료
