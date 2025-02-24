@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/login/login_model.dart';
-import 'package:gooinpro_parttimer/models/login/token_response_find_model.dart';
+
 
 import '../../services/api/loginapi/login_api.dart'; // LoginDataSend API 가져오기
 

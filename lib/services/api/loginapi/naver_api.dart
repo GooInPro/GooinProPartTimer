@@ -13,8 +13,8 @@ class naver_api {
 
         print("네이버 로그인 성공 ------------");
         return Login(
-          email: res.account.email ?? '',
-          name: res.account.name ?? '',
+          pemail: res.account.email ?? '',
+          pname: res.account.name ?? '',
         );
       }
 }

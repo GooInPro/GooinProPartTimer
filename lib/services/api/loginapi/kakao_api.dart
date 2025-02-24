@@ -21,8 +21,8 @@ class kakao_api {
           print("카카오톡으로 로그인 성공: ${token.accessToken}");
           user = await UserApi.instance.me();
           return Login(
-            email: user.kakaoAccount?.email ?? '',
-            name: user.kakaoAccount?.profile?.nickname ?? '',
+            pemail: user.kakaoAccount?.email ?? '',
+            pname: user.kakaoAccount?.profile?.nickname ?? '',
           );
         } catch (error) {
           print("카카오 로그인 실패 1: $error");
@@ -36,8 +36,8 @@ class kakao_api {
           user = await UserApi.instance.me();
           print(user);
           return Login(
-            email: user.kakaoAccount?.email ?? '',
-            name: user.kakaoAccount?.profile?.nickname ?? '',
+            pemail: user.kakaoAccount?.email ?? '',
+            pname: user.kakaoAccount?.profile?.nickname ?? '',
           );
         } catch(error) {
           print("카카오 로그인 실패 2: $error");
