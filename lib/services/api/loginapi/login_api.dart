@@ -4,12 +4,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gooinpro_parttimer/models/login/login_model.dart';
 
 import '../../../models/login/login_register_model.dart';
+import '../../../models/login/login_response_model.dart';
 
 class login_api {
   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
 
-  Future<bool> LoginDataSend(Login login) async {
+  Future<LoginResponse> LoginDataSend(Login login) async {
     final String email = login.pemail;
+    print("login api login data send --------------------------");
+    print(email);
 
     final url = Uri.parse('$baseUrl/login/find/$email');
 
@@ -20,9 +23,17 @@ class login_api {
 
       if (response.statusCode == 200) {
         print("api 호출 성공");
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>; // isNew값만 들고오면되니까 굳이 model안씀
-        bool isNew = jsonResponse["new"];
-        return isNew;
+        print(response.body);
+        print("--------");
+
+        final decodedResponse = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> jsonResponse = jsonDecode(decodedResponse);
+
+        LoginResponse loginResponse = LoginResponse.fromJson(jsonResponse);
+        print(loginResponse);
+        print(loginResponse.pname);
+        print(loginResponse.newUser);
+        return loginResponse;
       } else {
         print('API 호출 실패: 상태 코드 ${response.statusCode}');
         throw Exception('Failed to load data');
@@ -33,7 +44,7 @@ class login_api {
     }
   }
 
-  Future<LoginRegister> registerUser(LoginRegister registerData) async {
+  Future<LoginResponse> registerUser(LoginRegister registerData) async {
     final url = Uri.parse('$baseUrl/login/register');
 
     try {
@@ -45,12 +56,13 @@ class login_api {
 
       if (response.statusCode == 200) {
         print("회원가입 API 호출 성공");
-
         // 서버에서 반환한 응답 데이터 처리
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
+        LoginResponse data = LoginResponse.fromJson(jsonResponse);
+
         // 응답에서 필요한 데이터를 추출하여 LoginRegister 객체로 변환
-        return LoginRegister.fromJson(jsonResponse); // 여기서 응답을 LoginRegister 객체로 반환
+        return data; // 여기서 응답을 LoginRegister 객체로 반환
 
       } else {
         print('API 호출 실패: 상태 코드 ${response.statusCode}');

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/login/login_model.dart';
+import 'package:provider/provider.dart';
 
 
+import '../../models/login/login_response_model.dart';
+import '../../providers/user_provider.dart';
 import '../../services/api/loginapi/login_api.dart'; // LoginDataSend API 가져오기
 
 class KakaoRedirectPage extends StatefulWidget {
@@ -33,16 +36,23 @@ class _KakaoRedirectPageState extends State<KakaoRedirectPage> {
   // Login API 호출 함수
   Future<void> _sendLoginData(Login loginuser) async {
     try {
+      final loginProvider = Provider.of<UserProvider>(context, listen: false);
+
       final loginApi = login_api();
       // API 호출 (비동기 함수)
-      bool response = await loginApi.LoginDataSend(loginuser);
+      LoginResponse response = await loginApi.LoginDataSend(loginuser);
 
       print("redirect----------");
-      print(response);
-      if(response == true){
+      print(loginuser.pname);
+      print(response.pname);
+      print(response.newUser);
+
+      if(response.newUser == true){
+        loginProvider.registerUserData(loginuser.pemail, loginuser.pname);
         context.go('/register');
       }
       else{
+        loginProvider.updateUserData(response.pno, response.pemail, response.pname, response.accessToken, response.refreshToken);
         context.go('/jobposting');
       }
     } catch (e) {

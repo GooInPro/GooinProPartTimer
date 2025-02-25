@@ -50,8 +50,4 @@ class kakao_api {
     return null;
   }
 
-  // Future<Map<String, String>> sendProfile() {
-  //
-  // }
-
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:gooinpro_parttimer/models/login/login_model.dart';
 
+import '../../models/login/login_response_model.dart';
 import '../../services/api/loginapi/login_api.dart';
 import '../../services/api/loginapi/naver_api.dart';
 
@@ -36,7 +37,7 @@ class _NaverRedirectPageState extends State<NaverRedirectPage> {
     try {
       final loginApi = login_api();
       // API 호출 (비동기 함수)
-      bool response = await loginApi.LoginDataSend(loginuser);
+      LoginResponse response = await loginApi.LoginDataSend(loginuser);
 
       print("redirect----------");
       print(response);

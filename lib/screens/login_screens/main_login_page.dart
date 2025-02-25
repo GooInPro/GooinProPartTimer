@@ -26,7 +26,6 @@ class _MainLoginPageState extends State<MainLoginPage> {
   // onPressed에서 호출되는 함수
   void handleKakaoLogin() async {
       Login? loginuser = await kakaoLoginApi.kakaoLogin();
-
       if(loginuser != null) {
         context.go('/login/kakaore', extra: loginuser);
       } else {
