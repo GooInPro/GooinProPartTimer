@@ -1,10 +1,14 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_naver_login (0.0.1):
+    - Flutter
+    - naveridlogin-sdk-ios (~> 4.2.3)
   - flutter_naver_map (1.3.0):
     - Flutter
     - NMapsMap (= 3.19.0)
   - kakao_flutter_sdk_common (1.9.6):
     - Flutter
+  - naveridlogin-sdk-ios (4.2.3)
   - NMapsGeometry (1.0.2)
   - NMapsMap (3.19.0):
     - NMapsGeometry
@@ -22,6 +26,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_naver_login (from `.symlinks/plugins/flutter_naver_login/ios`)
   - flutter_naver_map (from `.symlinks/plugins/flutter_naver_map/ios`)
   - kakao_flutter_sdk_common (from `.symlinks/plugins/kakao_flutter_sdk_common/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -31,12 +36,15 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - naveridlogin-sdk-ios
     - NMapsGeometry
     - NMapsMap
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_naver_login:
+    :path: ".symlinks/plugins/flutter_naver_login/ios"
   flutter_naver_map:
     :path: ".symlinks/plugins/flutter_naver_map/ios"
   kakao_flutter_sdk_common:
@@ -52,8 +60,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_naver_login: 16059b897077e4cffa38046fe95155a8a15a83f2
   flutter_naver_map: b7ccf21ee350a34381ec92d0bfdad1e8714af9bc
   kakao_flutter_sdk_common: 7747df5fa2bf4cfcdc7aaa9ec260eb5e89e05f75
+  naveridlogin-sdk-ios: d9d46d02119d303023d7000cd5963864d5bb89e5
   NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
   NMapsMap: 99c10429d93340780b6f88d3fc7c0a3850b43664
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564

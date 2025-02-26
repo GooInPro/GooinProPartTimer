@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gooinpro_parttimer/providers/user_provider.dart';
 import 'package:gooinpro_parttimer/routes/app_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:provider/provider.dart';
 //KAKAO_NATIVE_KEY=dbdfbb3ac76487954c6402e5bee6ca4c
 // KAKAO_JAVASCRIPT_KEY=dd8ec49aa7a7c204f2f44478a984df27
 void main() async{
@@ -16,6 +18,8 @@ void main() async{
   print(javascriptAppKey);
   String apiHost = dotenv.env['API_HOST'] ?? 'No API host found';
 
+  print(await KakaoSdk.origin);
+
   KakaoSdk.init(
     nativeAppKey: nativeAppKey,
     javaScriptAppKey: javascriptAppKey
@@ -27,14 +31,15 @@ void main() async{
   print(apiHost);
 
   runApp(
-    // MultiProvider(
-    //   providers: [ // 상태 관리 provider
-    //     ChangeNotifierProvider(create: (_) => PartTimerProvider()),
-    //   ],
-    //   child:
-    MyApp(apiHost: apiHost),  // API_HOST를 MyApp으로 전달
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()), // UserProvider 등록
+      ],
+      child: MyApp(apiHost: apiHost),  // API_HOST를 MyApp으로 전달
+    ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   final String apiHost;

@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/jobpostings_application/jobpostings_application_model.dart';
+import '../../providers/user_provider.dart';
 import '../../services/api/jobpostingsapi/jobpostings_api.dart';
 
 class JobApplication {
+
   String jpacontent;
   String jpahourlyRate;
-  int pno = 1;
+  int pno;
   int jpno;
 
   JobApplication({this.jpacontent = '', this.jpahourlyRate = '', this.pno = 1, required this.jpno});
 
-  @override
-  String toString() {
-    return 'JobApplication(jpacontent: $jpacontent, jpahourlyRate: $jpahourlyRate, pno: $pno, jpno: $jpno)';
-  }
 }
 
 class JobPostingsApplicationRegisterPage extends StatefulWidget {
@@ -31,7 +31,8 @@ class JobPostingsApplicationRegisterPage extends StatefulWidget {
 
 
 class _JobPostingsApplicationState extends State<JobPostingsApplicationRegisterPage> {
-  var jobApplication;
+  late JobApplication jobApplication;
+  late UserProvider userProvider; // provider 1
 
   @override
   void initState() {
@@ -39,11 +40,17 @@ class _JobPostingsApplicationState extends State<JobPostingsApplicationRegisterP
     jobApplication = JobApplication(jpno: widget.jpno); // widget.jpno를 초기화 시 전달
   }
 
+  @override // provider 2
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userProvider = context.read<UserProvider>();
+  }
+
   JobPostingsApplication _convertToJobPostingsApplication(JobApplication jobApplication) {
     return JobPostingsApplication(
       jpacontent: jobApplication.jpacontent,
       jpahourlyRate: jobApplication.jpahourlyRate,
-      pno: jobApplication.pno,
+      pno: userProvider.pno ?? 1, // provider 3
       jpno: jobApplication.jpno,
     );
   }
@@ -57,6 +64,8 @@ class _JobPostingsApplicationState extends State<JobPostingsApplicationRegisterP
     await api.addApplicationPostings(application);
 
     print(application.toString());
+
+    context.go("/jobposting");
     // 예: 구직 신청 API 호출 등
   }
 
@@ -68,7 +77,7 @@ class _JobPostingsApplicationState extends State<JobPostingsApplicationRegisterP
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('지원서 등록${widget.jpno}'),
+        title: Text('지원서 등록'),
       ),
       body: Center(
         child: Padding(

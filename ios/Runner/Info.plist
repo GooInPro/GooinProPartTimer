@@ -75,5 +75,15 @@
 	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+
+	<key>naverConsumerKey</key>
+    <string>hHJpThofsgbuXzxs5G9f</string>
+    <key>naverConsumerSecret</key>
+    <string>OxlQ_0PM1t</string>
+    <key>naverServiceAppName</key>
+    <string>GooInProPartTimer</string>
+    <key>naverServiceAppUrlScheme</key>
+    <string>org.gooinpro.gooinproParttimer</string>
+
 </dict>
 </plist>
