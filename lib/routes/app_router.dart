@@ -35,7 +35,6 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Flutter Demo')),
       body: child,
       bottomNavigationBar: isLoginPage ? null : BottomBar(),
     );
