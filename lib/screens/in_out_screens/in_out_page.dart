@@ -12,7 +12,6 @@ import '../../models/worklogs/worklog_send_model.dart';
 import '../../providers/user_provider.dart';
 import '../../services/api/worklogapi/worklog_api.dart';
 
-
 class InOutPage extends StatefulWidget {
   final int jmno;
   final int jpno;
@@ -32,8 +31,6 @@ class _InOutPageState extends State<InOutPage> {
   WorkLogApi workLogApi = WorkLogApi();
   bool inout = false; // fase = 출근, true = 퇴근
   int workStatus = 7;
-  String workStatusReal = '';
-
 
 
   @override
@@ -46,44 +43,44 @@ class _InOutPageState extends State<InOutPage> {
     super.didChangeDependencies();
     userProvider = context.read<UserProvider>();
     getWorkTimes();
+    getRealStart(userProvider.pno!, widget.jmno);
   }
 
   Future<void> getWorkTimes() async {
     WorkTimes data = await inoutapi.getWorkTime(userProvider.pno!, widget.jpno);
     setState(() {
       workTimes = data;
-      print("----------");
-      print(workTimes?.jmworkStartTime.toString() ?? '');
-      print(workTimes?.jmworkEndTim.toString() ?? '');
     });
   }
 
   Future<WorkLogStart> sendStartTime(WorkLogSend sendData) async {
-    print("send start");
-    print(sendData.pno);
-      WorkLogStart data = await workLogApi.sendStartTime(sendData);
-      print(data);
-      setState(() {
-        workLogStart = WorkLogStart(
-          wlstartTime: data.wlstartTime,
-          wlworkStatus: data.wlworkStatus,
-        );
-      });
-      inout = true;
-      workStatus = data.wlworkStatus;
-      return data;  // 정상적으로 데이터를 반환
+    WorkLogStart data = await workLogApi.sendStartTime(sendData);
+    setState(() {
+      workLogStart = WorkLogStart(
+        wlstartTime: data.wlstartTime,
+        wlworkStatus: data.wlworkStatus,
+      );
+    });
+    inout = true;
+    workStatus = data.wlworkStatus;
+    return data; // 정상적으로 데이터를 반환
   }
 
   Future<WorkLogEnd> sendEndTime(WorkLogSend sendData) async {
     WorkLogEnd data = await workLogApi.sendEndTime(sendData);
     setState(() {
       workLogEnd = WorkLogEnd(
-          wlendTime: data.wlendTime,
-          wlworkStatus: data.wlworkStatus
+        wlendTime: data.wlendTime,
+        wlworkStatus: data.wlworkStatus,
       );
     });
     inout = false;
     workStatus = data.wlworkStatus;
+    return data;
+  }
+
+  Future<String> getRealStart(int pno, int jmno) async {
+    String data = await workLogApi.realStartTime(pno, jmno);
     return data;
   }
 
@@ -104,60 +101,156 @@ class _InOutPageState extends State<InOutPage> {
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     Widget inOutButton;
-    if(inout == false){
+
+    // 출근/퇴근 버튼
+    if (inout == false) {
       inOutButton = ElevatedButton(
         onPressed: () {
-          print("출근버튼 클릭");
           WorkLogSend sendData = WorkLogSend(
-              pno: userProvider.pno!,
-              jmno: widget.jmno
+            pno: userProvider.pno!,
+            jmno: widget.jmno,
           );
           sendStartTime(sendData);
         },
-        child: Text('츨근'),
+        child: Text(
+          '출근',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          backgroundColor: Colors.lightBlue, // 하늘색
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30), // 둥근 모서리
+          ),
+          elevation: 5, // 버튼에 그림자 추가
+        ),
+      );
+    } else {
+      inOutButton = ElevatedButton(
+        onPressed: () {
+          WorkLogSend sendData = WorkLogSend(
+            pno: userProvider.pno!,
+            jmno: widget.jmno,
+          );
+          sendEndTime(sendData);
+        },
+        child: Text(
+          '퇴근',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          backgroundColor: Colors.lightBlue, // 하늘색
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30), // 둥근 모서리
+          ),
+          elevation: 5, // 버튼에 그림자 추가
         ),
       );
     }
-    else{
-      inOutButton = ElevatedButton(
-          onPressed: () {
-            print("퇴근버튼 클릭");
-            WorkLogSend sendData = WorkLogSend(
-                pno: userProvider.pno!,
-                jmno: widget.jmno
-            );
-            sendEndTime(sendData);
-          },
-          child: Text('퇴근'),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          ),
-      );
-    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("in-out button"),
+        title: Text("출퇴근"),
         backgroundColor: Colors.blueAccent,
       ),
       body: workTimes == null
           ? Center(child: CircularProgressIndicator()) // 데이터가 로딩 중일 때 표시
-          : Column(
-        children: [
-          Text(workTimes?.jmworkStartTime != null ? DateFormat('HH:mm').format(workTimes!.jmworkStartTime!): ''),
-          Text(workTimes?.jmworkEndTim != null ? DateFormat('HH:mm').format(workTimes!.jmworkEndTim!): ''),
-          Text(workLogStart?.wlstartTime != null ? DateFormat('HH:mm').format(workLogStart!.wlstartTime): ''),
-          Text(workLogEnd?.wlendTime != null ? DateFormat('HH:mm').format(workLogEnd!.wlendTime): ''),
-          Text(getWorkStatusString(workStatus)),
-          inOutButton
-        ],
+          : Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 출근/퇴근 버튼
+            inOutButton,
+
+            SizedBox(height: 30),
+
+            // 출근 시간과 퇴근 시간 (박스로 묶기)
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.lightBlue[50],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.lightBlue, width: 2),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    workTimes?.jmworkStartTime != null
+                        ? DateFormat('HH:mm').format(
+                        workTimes!.jmworkStartTime!)
+                        : '',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    workTimes?.jmworkEndTim != null
+                        ? DateFormat('HH:mm').format(workTimes!.jmworkEndTim!)
+                        : '',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            // 실제 출근 시간과 퇴근 시간 (박스로 묶기)
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.lightBlue[50],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.lightBlue, width: 2),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    workLogStart?.wlstartTime != null
+                        ? DateFormat('HH:mm').format(workLogStart!.wlstartTime)
+                        : '',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    workLogEnd?.wlendTime != null
+                        ? DateFormat('HH:mm').format(workLogEnd!.wlendTime)
+                        : '',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            // 출근 상태 (출근 상태도 박스로 묶기)
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.lightBlue[50],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.lightBlue, width: 2),
+              ),
+              child: Text(
+                getWorkStatusString(workStatus),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

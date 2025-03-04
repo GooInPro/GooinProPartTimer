@@ -3,6 +3,7 @@ import 'package:gooinpro_parttimer/models/worklogs/worklog_end_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_start_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import '../../../models/worklogs/worklog_send_model.dart';
 
 class WorkLogApi {
@@ -39,7 +40,7 @@ class WorkLogApi {
 
   Future<WorkLogEnd> sendEndTime(WorkLogSend sendData) async {
     try{
-      final url = Uri.parse('${baseUrl}/worklog/end');
+      final url = Uri.parse('$baseUrl/worklog/end');
 
       print(url);
       print(sendData.toJson());
@@ -57,6 +58,33 @@ class WorkLogApi {
       return WorkLogEnd.fromJson(DecodeData);
     } catch (e){
      throw Exception (e);
+    }
+  }
+
+  Future<String> realStartTime(int pno, int jmno) async {
+    try{
+
+      print("real start time api------------------------");
+      final response = await http.get(Uri.parse('$baseUrl/worklog/realStart?pno=$pno&jmno=$jmno'));
+
+      if (response.statusCode == 200) {
+        String data = response.body;
+
+        String adjustData = data.substring(12,20);
+        print(adjustData);
+        DateTime dateTime = DateFormat("HH:mm").parse(adjustData).add(Duration(hours: 9));
+
+        // 변환된 시간을 시:분 형식으로 반환
+        String adjustedTime = DateFormat("HH:mm").format(dateTime);
+        print("Adjusted Time (after adding 9 hours): $adjustedTime");
+
+        return adjustedTime;
+      } else{
+        throw Exception('Failed to load workplace list: ${response.statusCode}');
+      }
+
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }
