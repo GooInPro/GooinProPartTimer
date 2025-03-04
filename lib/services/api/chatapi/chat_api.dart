@@ -8,15 +8,14 @@ class chat_api {
 
   final String baseUrl = dotenv.env['CHAT_API_HOST'] ?? 'No API host found';
 
-  Future<List<ChatRoomListModel>> getChatRoomListAPI({int page = 1, int size = 10, required String email}) async {
+  Future<List<ChatRoomListModel>> getChatRoomListAPI({required String email}) async {
 
     try{
-      final response = await http.get(Uri.parse('$baseUrl/chatroom/list/$email?page=$page&size=$size'));
+      final response = await http.get(Uri.parse('$baseUrl/chatroom/list/$email'));
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes); // 응답을 UTF-8로 디코딩
-        final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
-        final List<dynamic> data = jsonResponse['dtoList']; // PageResponseDTO의 content
+        final List<dynamic> data = json.decode(decodedResponse);
 
         return data.map((item) => ChatRoomListModel.fromJson(item)).toList();
       } else {
@@ -27,10 +26,10 @@ class chat_api {
     }
   }
 
-  Future<List<CHatMessageModel>> getChatMessagesAPI({int page = 1, int size = 50, required String roomId}) async {
+  Future<List<CHatMessageModel>> getChatMessagesAPI({required String roomId}) async {
 
     try{
-      final response = await http.get(Uri.parse('$baseUrl/chat/load/$roomId?page=$page&size=$size'));
+      final response = await http.get(Uri.parse('$baseUrl/chat/load/$roomId'));
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes); // 응답을 UTF-8로 디코딩

@@ -48,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _loadPreviousMessages() async {
     try {
-      final messages = await _chatApi.getChatMessagesAPI(page: 1, size: 50, roomId: _roomId);
+      final messages = await _chatApi.getChatMessagesAPI(roomId: _roomId);
       setState(() {
         _messages.insertAll(0, messages.map((msg) => {
           "text": msg.message,
