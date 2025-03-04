@@ -85,5 +85,10 @@
     <key>naverServiceAppUrlScheme</key>
     <string>org.gooinpro.gooinproParttimer</string>
 
+    <key>NSCameraUsageDescription</key>
+    <string>We need your permission to use the camera</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need your permission to access the photo library</string>
+
 </dict>
 </plist>

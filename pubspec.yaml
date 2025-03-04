@@ -46,6 +46,7 @@ dependencies:
   intl: ^0.20.2
   provider: ^6.1.2
   table_calendar: ^3.2.0
+  image_picker: ^0.8.4+4
 
 
 dev_dependencies:
