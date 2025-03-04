@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/parttimer/parttimer_model.dart';
@@ -20,7 +22,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
 
   // 임시로 pno 값 하드 코딩!!!!!!!!!!!!!!
   // TODO: Provider 구현 후 제거 예정
-  final int tempPno = 17;
+  final int tempPno = 1;
 
   @override
   void initState() {
