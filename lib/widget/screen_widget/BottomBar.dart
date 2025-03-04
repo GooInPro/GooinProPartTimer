@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../providers/user_provider.dart';
+
 class BottomBar extends StatelessWidget {
+
+  late UserProvider userProvider; // provider 1
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -15,7 +23,7 @@ class BottomBar extends StatelessWidget {
             context.go('/inoutwork');
             break;
           case 2:
-            context.go('/chat/test6@email.com');
+            context.go('/chat');
             break;
           case 3:
             context.go('/parttimer');
