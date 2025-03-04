@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/services/api/loginapi/login_api.dart';
 import 'package:gooinpro_parttimer/utils/file_upload_util.dart';
@@ -24,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   List<File> _imagesProfile = [];
   List<File> _imagesDocument = [];
   final picker = ImagePicker();
+  final String baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'No API host found';
 
   @override
   void initState() {
@@ -81,8 +83,10 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_imagesProfile == null){
       return;
     }
-    FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/document');
-    FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
+    // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
+    // FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: '$baseUrl/upload/api/partTimer/profile'); 안드로이드 용
+     FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/document');
+     FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
   }
 
   void _onClickSend() async {
