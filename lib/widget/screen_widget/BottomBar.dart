@@ -15,7 +15,7 @@ class BottomBar extends StatelessWidget {
             context.go('/inoutwork');
             break;
           case 2:
-            context.go('/chat');
+            context.go('/chat/test6@email.com');
             break;
           case 3:
             context.go('/parttimer');
