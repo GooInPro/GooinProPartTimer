@@ -2,21 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>[USAGE PERPOSE]</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>[USAGE PERPOSE]</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>[USAGE PERPOSE]</string>
-    <key>NMFClientId</key>
-    <string>kwmvewdvkr</string>
-    <key>io.flutter.embedded_views_preview</key>
-    <true/>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-
-
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -35,9 +22,39 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaodbdfbb3ac76487954c6402e5bee6ca4c</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaoplus</string>
+		<string>kakaotalk</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NMFClientId</key>
+	<string>kwmvewdvkr</string>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -56,9 +73,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+
+	<key>naverConsumerKey</key>
+    <string>hHJpThofsgbuXzxs5G9f</string>
+    <key>naverConsumerSecret</key>
+    <string>OxlQ_0PM1t</string>
+    <key>naverServiceAppName</key>
+    <string>GooInProPartTimer</string>
+    <key>naverServiceAppUrlScheme</key>
+    <string>org.gooinpro.gooinproParttimer</string>
+
 </dict>
 </plist>

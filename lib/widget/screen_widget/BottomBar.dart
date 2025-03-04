@@ -12,7 +12,7 @@ class BottomBar extends StatelessWidget {
             context.go('/jobposting');
             break;
           case 1:
-            context.go('/inout');
+            context.go('/inoutwork');
             break;
           case 2:
             context.go('/chat');

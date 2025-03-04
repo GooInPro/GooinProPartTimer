@@ -56,6 +56,7 @@ class navermap_util {
           target: NLatLng(35.165949, 129.132658), // 초기 위치 설정
           zoom: 15.0, // 초기 확대 비율
         ),
+        locationButtonEnable: true,
       ),
       onMapReady: onMapCreated, // onMapCreated 콜백 추가
     );

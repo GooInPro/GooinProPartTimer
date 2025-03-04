@@ -6,15 +6,18 @@ import '../widget/screen_widget/BottomBar.dart';
 import 'chatting_page_router.dart';
 import 'in_out_page_router.dart';
 import 'job_posting_page_router.dart';
+import 'login_page_router.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/jobposting',
+  initialLocation: '/',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        return MainScreen(child: child);
+        final isLoginPage = state.uri.toString() == '/';
+        return MainScreen(child: child, isLoginPage: isLoginPage);
       },
       routes: [
+        loginPageRoute,
         jobPostingPageRoute, // jobPostingPage 라우트
         inOutPageRoute,      // inOutPage 라우트
         chatPageRoute,   // chattingPage 라우트
@@ -26,14 +29,14 @@ final GoRouter appRouter = GoRouter(
 
 class MainScreen extends StatelessWidget {
   final Widget child;
-  const MainScreen({super.key, required this.child});
+  final bool isLoginPage;
+  const MainScreen({super.key, required this.child, required  this.isLoginPage});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Flutter Demo')),
       body: child,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: isLoginPage ? null : BottomBar(),
     );
   }
 }
