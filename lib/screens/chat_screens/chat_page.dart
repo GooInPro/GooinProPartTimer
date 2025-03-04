@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gooinpro_parttimer/widget/chat_widgets/chat_message.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import '../../widget/chat_widgets/chat_input.dart';
@@ -18,6 +19,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+
+  final String chatSocket = dotenv.env['CHAT_SOCKET'] ?? 'No API host found';
 
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
@@ -59,7 +62,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _connectWebSocket() {
 
-    final socketUrl = "ws://localhost:8080/ws";
+    final socketUrl = chatSocket;
     final client = StompClient(
         config: StompConfig(
           url: socketUrl,

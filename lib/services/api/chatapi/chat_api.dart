@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class chat_api {
 
-  final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
+  final String baseUrl = dotenv.env['CHAT_API_HOST'] ?? 'No API host found';
 
   Future<List<ChatRoomListModel>> getChatRoomListAPI({int page = 1, int size = 10, required String email}) async {
 
