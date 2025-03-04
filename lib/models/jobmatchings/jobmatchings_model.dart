@@ -1,52 +1,46 @@
 class JobMatchings {
   final int jmno;
-  final int? jpno;
+  final String jpname;
   final DateTime jmregdate;
-  final String? jmstatus;
-  final bool jmdelete;
+  final DateTime jmstartDate;
   final DateTime? jmendDate;
   final int jmhourlyRate;
-  final DateTime jmstartDate;
   final String jmworkDays;
-  final DateTime? jmworkEndTime;
   final DateTime? jmworkStartTime;
-  final int? eno;
-  final int? pno;
-  final String jpname;
+  final DateTime? jmworkEndTime;
+  final String? wroadAddress;
+  final String? wdetailAddress;
+  final bool jmdelete;  // 추가
 
   JobMatchings({
     required this.jmno,
-    this.jpno,
+    required this.jpname,
     required this.jmregdate,
-    this.jmstatus,
-    required this.jmdelete,
+    required this.jmstartDate,
     this.jmendDate,
     required this.jmhourlyRate,
-    required this.jmstartDate,
     required this.jmworkDays,
-    this.jmworkEndTime,
     this.jmworkStartTime,
-    this.eno,
-    this.pno,
-    required this.jpname,
+    this.jmworkEndTime,
+    this.wroadAddress,
+    this.wdetailAddress,
+    required this.jmdelete,
   });
 
   factory JobMatchings.fromJson(Map<String, dynamic> json) {
     return JobMatchings(
       jmno: json['jmno'],
-      jpno: json['jpno'],
+      jpname: json['jpname'],
       jmregdate: DateTime.parse(json['jmregdate']),
-      jmstatus: json['jmstatus'],
-      jmdelete: json['jmdelete'] ?? false,  // null일 경우 기본값 false
+      jmstartDate: DateTime.parse(json['jmstartDate']),
       jmendDate: json['jmendDate'] != null ? DateTime.parse(json['jmendDate']) : null,
       jmhourlyRate: json['jmhourlyRate'],
-      jmstartDate: DateTime.parse(json['jmstartDate']),
       jmworkDays: json['jmworkDays'],
-      jmworkEndTime: json['jmworkEndTime'] != null ? DateTime.parse(json['jmworkEndTime']) : null,
       jmworkStartTime: json['jmworkStartTime'] != null ? DateTime.parse(json['jmworkStartTime']) : null,
-      eno: json['eno'],
-      pno: json['pno'],
-      jpname: json['jpname'],
+      jmworkEndTime: json['jmworkEndTime'] != null ? DateTime.parse(json['jmworkEndTime']) : null,
+      wroadAddress: json['wroadAddress'],
+      wdetailAddress: json['wdetailAddress'],
+      jmdelete: json['jmdelete'] ?? false,
     );
   }
 }

@@ -7,7 +7,7 @@ class SalaryApi {
   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
 
   // 월별 급여 조회
-  Future<List<Salary>> getMonthlySalary(int pno, {int? year}) async {
+  Future<List<SalaryMonthly>> getMonthlySalary(int pno, {int? year}) async {
     try {
       final queryParams = {
         'pno': pno.toString(),
@@ -24,7 +24,7 @@ class SalaryApi {
         final List<dynamic> jsonResponse = json.decode(decodedResponse);
         print('Monthly Salary Response: $jsonResponse');
 
-        return jsonResponse.map((json) => Salary.fromJson(json)).toList();
+        return jsonResponse.map((json) => SalaryMonthly.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load monthly salary: ${response.statusCode}');
       }
@@ -35,7 +35,7 @@ class SalaryApi {
   }
 
   // 알바별 급여 조회
-  Future<List<Salary>> getSalaryByJobs(int pno) async {
+  Future<List<SalaryJob>> getSalaryByJobs(int pno) async {
     try {
       final response = await http.get(
           Uri.parse('$baseUrl/part/api/v1/salary/jobs?pno=$pno')
@@ -46,7 +46,7 @@ class SalaryApi {
         final List<dynamic> jsonResponse = json.decode(decodedResponse);
         print('Salary by Jobs Response: $jsonResponse');
 
-        return jsonResponse.map((json) => Salary.fromJson(json)).toList();
+        return jsonResponse.map((json) => SalaryJob.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load salary by jobs: ${response.statusCode}');
       }

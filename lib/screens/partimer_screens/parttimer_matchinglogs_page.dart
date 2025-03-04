@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/services/api/parttimerapi/parttimer_api.dart';
 
@@ -85,27 +86,33 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
         final job = jobs[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  job.jpname,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+          child: InkWell(
+            onTap: () {
+              context.go('/parttimer/workdetail', extra: job);
+              print('Navigating to detail with data: ${job.toString()}');
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    job.jpname,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text('시급: ${job.jmhourlyRate}원'),
-                Text('근무 시작일: ${job.jmstartDate.toString().split(' ')[0]}'),
-                if (job.jmendDate != null)
-                  Text('근무 종료일: ${job.jmendDate.toString().split(' ')[0]}'),
-                Text('근무 요일: ${_formatWorkDays(job.jmworkDays)}'),
-                if (job.jmworkStartTime != null && job.jmworkEndTime != null)
-                  Text('근무 시간: ${_formatTime(job.jmworkStartTime!)} ~ ${_formatTime(job.jmworkEndTime!)}'),
-              ],
+                  const SizedBox(height: 8),
+                  Text('시급: ${job.jmhourlyRate}원'),
+                  Text('근무 시작일: ${job.jmstartDate.toString().split(' ')[0]}'),
+                  if (job.jmendDate != null)
+                    Text('근무 종료일: ${job.jmendDate.toString().split(' ')[0]}'),
+                  Text('근무 요일: ${_formatWorkDays(job.jmworkDays)}'),
+                  if (job.jmworkStartTime != null && job.jmworkEndTime != null)
+                    Text('근무 시간: ${_formatTime(job.jmworkStartTime!)} ~ ${_formatTime(job.jmworkEndTime!)}'),
+                ],
+              ),
             ),
           ),
         );
