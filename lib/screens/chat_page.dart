@@ -120,7 +120,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text("채팅 테스트")),
+      appBar: AppBar(title: Text("채팅 테스트"),backgroundColor: Colors.blueAccent,),
       body: Column(
         children: [
           Expanded(

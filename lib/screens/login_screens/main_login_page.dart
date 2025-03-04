@@ -49,7 +49,6 @@ class _MainLoginPageState extends State<MainLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // 배경을 흰색으로 설정
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -57,18 +56,25 @@ class _MainLoginPageState extends State<MainLoginPage> {
             ElevatedButton(
               onPressed: handleKakaoLogin, // 카카오 로그인
               style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-              child: Text(
-                '카카오 로그인',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0), // 왼쪽, 오른쪽 여백 추가
+                child: Image.asset(
+                  'assets/image/kakao_login.png',
+                ),
               ),
             ),
             SizedBox(height: 20), // 버튼 간 간격
             ElevatedButton(
               onPressed: handleNaverLogin, // 네이버 로그인
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text(
-                '네이버 로그인',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0), // 왼쪽, 오른쪽 여백 추가
+                child: Image.asset(
+                  'assets/image/naver_login.png',
+                  width: 200, // 원하는 크기로 조절
+                  height: 50, // 원하는 크기로 조절
+                  fit: BoxFit.contain, // 이미지 비율 유지하며 크기 조정
+                ),
               ),
             ),
           ],

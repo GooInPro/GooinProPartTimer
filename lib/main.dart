@@ -5,8 +5,7 @@ import 'package:gooinpro_parttimer/providers/user_provider.dart';
 import 'package:gooinpro_parttimer/routes/app_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
-//KAKAO_NATIVE_KEY=dbdfbb3ac76487954c6402e5bee6ca4c
-// KAKAO_JAVASCRIPT_KEY=dd8ec49aa7a7c204f2f44478a984df27
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  // Flutter 엔진 초기화
   await dotenv.load(fileName: 'assets/.env');  // .env 파일 로드
