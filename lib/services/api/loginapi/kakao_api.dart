@@ -1,9 +1,11 @@
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
+import '../../../models/login/login_model.dart';
+
 class kakao_api {
 
 
-  Future<User?> kakaoLogin() async {
+  Future<Login?> kakaoLogin() async {
 
     final User? user;
 
@@ -18,7 +20,10 @@ class kakao_api {
           print("---------------1 login");
           print("카카오톡으로 로그인 성공: ${token.accessToken}");
           user = await UserApi.instance.me();
-          return user;
+          return Login(
+            pemail: user.kakaoAccount?.email ?? '',
+            pname: user.kakaoAccount?.profile?.nickname ?? '',
+          );
         } catch (error) {
           print("카카오 로그인 실패 1: $error");
         }
@@ -32,7 +37,10 @@ class kakao_api {
           print('카카오 계정 로그인 성공: ${token.accessToken}');
           user = await UserApi.instance.me();
           print(user);
-          return user;
+          return Login(
+            pemail: user.kakaoAccount?.email ?? '',
+            pname: user.kakaoAccount?.profile?.nickname ?? '',
+          );
         } catch(error) {
           print("카카오 로그인 실패 2: $error");
         }
@@ -43,9 +51,5 @@ class kakao_api {
     }
     return null;
   }
-
-  // Future<Map<String, String>> sendProfile() {
-  //
-  // }
 
 }
