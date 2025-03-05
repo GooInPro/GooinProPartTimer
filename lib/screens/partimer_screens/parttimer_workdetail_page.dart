@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
 
 class PartTimerWorkDetailPage extends StatefulWidget {
   final JobMatchings jobMatching;
@@ -21,6 +19,7 @@ class PartTimerWorkDetailPage extends StatefulWidget {
 class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
   SalaryJob? salaryInfo;
   bool isLoading = true;
+  final SalaryApi _salaryApi = SalaryApi();
 
   @override
   void initState() {
@@ -33,45 +32,33 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
       // 하드코딩된 pno 값 사용
       const int pno = 1;
 
-      // API 호스트 가져오기 (.env 파일에는 기본 URL만 포함: "API_HOST=http://192.168.50.34:8080")
-      final apiHost = dotenv.env['API_HOST'] ?? 'http://192.168.50.34:8080';
-      print('API 호스트: $apiHost'); // 로그 추가
+      print('급여 정보 로드 시작 - pno: $pno, jpname: ${widget.jobMatching.jpname}');
 
-      final url = '$apiHost/part/api/v1/salary/jobs?pno=$pno';
-      print('요청 URL: $url'); // 로그 추가
+      final salaryJobs = await _salaryApi.getSalaryByJobs(pno);
+      print('API에서 가져온 급여 정보 수: ${salaryJobs.length}');
 
-      final response = await http.get(Uri.parse(url));
-      print('응답 상태 코드: ${response.statusCode}'); // 로그 추가
-
-      if (response.statusCode == 200) {
-        final String decodedResponse = utf8.decode(response.bodyBytes);
-        print('응답 데이터: $decodedResponse'); // 로그 추가
-
-        final List<dynamic> jsonResponse = json.decode(decodedResponse);
-        final List<SalaryJob> salaryJobs = jsonResponse.map((json) => SalaryJob.fromJson(json)).toList();
-
-        print('파싱된 급여 정보 수: ${salaryJobs.length}'); // 로그 추가
-
-        // 현재 근무지와 일치하는 급여 정보 찾기
-        SalaryJob? matchingSalary;
-        for (var job in salaryJobs) {
-          print('비교: ${job.jpname} vs ${widget.jobMatching.jpname}'); // 로그 추가
-          if (job.jpname == widget.jobMatching.jpname) {
-            matchingSalary = job;
-            break;
-          }
+      // 현재 근무지와 일치하는 급여 정보 찾기
+      SalaryJob? matchingSalary;
+      for (var job in salaryJobs) {
+        print('비교: [${job.jpname}] vs [${widget.jobMatching.jpname}]');
+        // 공백을 제거하고 대소문자 구분 없이 비교
+        if (job.jpname.trim().toLowerCase() == widget.jobMatching.jpname.trim().toLowerCase()) {
+          print('급여 정보 일치 발견!');
+          matchingSalary = job;
+          break;
         }
-
-        setState(() {
-          salaryInfo = matchingSalary;
-          isLoading = false;
-        });
-      } else {
-        print('API 호출 실패: ${response.statusCode}');
-        setState(() {
-          isLoading = false;
-        });
       }
+
+      if (matchingSalary == null) {
+        print('일치하는 급여 정보를 찾지 못했습니다.');
+      } else {
+        print('일치하는 급여 정보: ${matchingSalary.jpname}, ${matchingSalary.totalHours}시간, ${matchingSalary.totalSalary}원');
+      }
+
+      setState(() {
+        salaryInfo = matchingSalary;
+        isLoading = false;
+      });
     } catch (e) {
       print('급여 정보 로드 중 오류 발생: $e');
       setState(() {
@@ -134,9 +121,9 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
                         '${_formatTime(widget.jobMatching.jmworkStartTime!)} ~ ${_formatTime(widget.jobMatching.jmworkEndTime!)}',
                       ),
                     _buildInfoRow('시급', '${widget.jobMatching.jmhourlyRate}원'),
-                    _buildInfoRow('근무 시작일', widget.jobMatching.jmstartDate.toString().split(' ')[0]),
+                    _buildInfoRow('계약 시작일', widget.jobMatching.jmstartDate.toString().split(' ')[0]),
                     if (widget.jobMatching.jmendDate != null)
-                      _buildInfoRow('근무 종료일', widget.jobMatching.jmendDate.toString().split(' ')[0]),
+                      _buildInfoRow('계약 종료일', widget.jobMatching.jmendDate.toString().split(' ')[0]),
                     if (widget.jobMatching.wroadAddress != null)
                       _buildInfoRow('도로명 주소', widget.jobMatching.wroadAddress!),
                     if (widget.jobMatching.wdetailAddress != null)
