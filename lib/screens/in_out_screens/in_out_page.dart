@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/work_tims_model.dart';
+import 'package:gooinpro_parttimer/models/worklogs/worklog_real_time_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_start_model.dart';
 import 'package:gooinpro_parttimer/services/api/inoutapi/in_out_api.dart';
 import 'package:provider/provider.dart';
@@ -27,11 +28,9 @@ class _InOutPageState extends State<InOutPage> {
   WorkTimes? workTimes; // 회사의 출퇴근 기준 9시 ~ 18시
   WorkLogStart? workLogStart; // 본인 출근 시간
   WorkLogEnd? workLogEnd;
+  RealTime? realTime;
   InOutapi inoutapi = InOutapi();
   WorkLogApi workLogApi = WorkLogApi();
-  bool inout = false; // fase = 출근, true = 퇴근
-  int workStatus = 7;
-
 
   @override
   void initState() {
@@ -53,35 +52,54 @@ class _InOutPageState extends State<InOutPage> {
     });
   }
 
-  Future<WorkLogStart> sendStartTime(WorkLogSend sendData) async {
+  Future<void> sendStartTime(WorkLogSend sendData) async {
     WorkLogStart data = await workLogApi.sendStartTime(sendData);
+    WorkLogStart realData = await workLogApi.realStartTime(userProvider.pno!, widget.jmno);
+
     setState(() {
-      workLogStart = WorkLogStart(
+      realTime = RealTime(
+        wlstartTime: realData.wlstartTime,
+        wlendTime: null,
+        wlworkStatus: realData.wlworkStatus,
+      );
+    });
+  }
+
+  Future<void> sendEndTime(WorkLogSend sendData) async {
+    WorkLogEnd data = await workLogApi.sendEndTime(sendData);
+    WorkLogEnd realData = await workLogApi.realEndTime(userProvider.pno!, widget.jmno);
+
+    setState(() {
+      realTime = RealTime(
+        wlstartTime: realTime?.wlstartTime,
+        wlendTime: realData.wlendTime,
+        wlworkStatus: realData.wlworkStatus,
+      );
+    });
+  }
+
+  Future<void> getRealStart(int pno, int jmno) async {
+    WorkLogStart data = await workLogApi.realStartTime(pno, jmno);
+    setState(() {
+      workLogStart = data; // realStart 데이터 저장
+      realTime = RealTime(
         wlstartTime: data.wlstartTime,
+        wlendTime: null,
         wlworkStatus: data.wlworkStatus,
       );
     });
-    inout = true;
-    workStatus = data.wlworkStatus;
-    return data; // 정상적으로 데이터를 반환
   }
 
-  Future<WorkLogEnd> sendEndTime(WorkLogSend sendData) async {
-    WorkLogEnd data = await workLogApi.sendEndTime(sendData);
+  Future<void> getRealEnd(int pno, int jmno) async {
+    WorkLogEnd data = await workLogApi.realEndTime(pno, jmno);
     setState(() {
-      workLogEnd = WorkLogEnd(
+      workLogEnd = data; // realStart 데이터 저장
+      realTime = RealTime(
+        wlstartTime: realTime?.wlstartTime,
         wlendTime: data.wlendTime,
         wlworkStatus: data.wlworkStatus,
       );
     });
-    inout = false;
-    workStatus = data.wlworkStatus;
-    return data;
-  }
-
-  Future<String> getRealStart(int pno, int jmno) async {
-    String data = await workLogApi.realStartTime(pno, jmno);
-    return data;
   }
 
   String getWorkStatusString(int status) {
@@ -106,7 +124,7 @@ class _InOutPageState extends State<InOutPage> {
     Widget inOutButton;
 
     // 출근/퇴근 버튼
-    if (inout == false) {
+    if (realTime?.wlstartTime == null) {
       inOutButton = ElevatedButton(
         onPressed: () {
           WorkLogSend sendData = WorkLogSend(
@@ -219,14 +237,14 @@ class _InOutPageState extends State<InOutPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    workLogStart?.wlstartTime != null
-                        ? DateFormat('HH:mm').format(workLogStart!.wlstartTime)
+                    realTime?.wlstartTime != null
+                        ? DateFormat('HH:mm').format(realTime!.wlstartTime!)
                         : '',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    workLogEnd?.wlendTime != null
-                        ? DateFormat('HH:mm').format(workLogEnd!.wlendTime)
+                    realTime?.wlendTime != null
+                        ? DateFormat('HH:mm').format(realTime!.wlendTime!)
                         : '',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
@@ -245,7 +263,7 @@ class _InOutPageState extends State<InOutPage> {
                 border: Border.all(color: Colors.lightBlue, width: 2),
               ),
               child: Text(
-                getWorkStatusString(workStatus),
+                getWorkStatusString(realTime?.wlworkStatus ?? 0),
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
