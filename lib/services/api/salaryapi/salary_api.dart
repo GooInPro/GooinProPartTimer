@@ -79,4 +79,39 @@ class SalaryApi {
       throw Exception('Error fetching salary by jobs: $e');
     }
   }
+
+  // 일별 급여 조회
+  Future<List<SalaryDaily>> getDailySalary(int pno, {int? jmno, int? year, int? month}) async {
+    try {
+      final queryParams = {
+        'pno': pno.toString(),
+        if (jmno != null) 'jmno': jmno.toString(),
+        if (year != null) 'year': year.toString(),
+        if (month != null) 'month': month.toString(),
+      };
+
+      final uri = Uri.parse('$baseUrl/salary/daily')
+          .replace(queryParameters: queryParams);
+      print('요청 URL: $uri'); // 디버깅용 로그
+
+      final response = await http.get(uri);
+      print('응답 상태 코드: ${response.statusCode}'); // 디버깅용 로그
+
+      if (response.statusCode == 200) {
+        final String decodedResponse = utf8.decode(response.bodyBytes);
+        print('응답 데이터: $decodedResponse'); // 디버깅용 로그
+
+        final List<dynamic> jsonResponse = json.decode(decodedResponse);
+        return jsonResponse.map((json) => SalaryDaily.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load daily salary: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching daily salary: $e');
+      throw Exception('Error fetching daily salary: $e');
+    }
+  }
+
+
+
 }

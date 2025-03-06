@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-class PartTimerCalendarPage extends StatefulWidget {
-  final JobMatchings jobMatching;  // 근무지 정보
-
-  const PartTimerCalendarPage({
-    super.key,
-    required this.jobMatching,
-  });
+class PartTimerCalendarTotalPage extends StatefulWidget {
+  const PartTimerCalendarTotalPage({super.key});
 
   @override
-  State<PartTimerCalendarPage> createState() => _PartTimerCalendarPageState();
+  State<PartTimerCalendarTotalPage> createState() => _PartTimerCalendarTotalPageState();
 }
 
-class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
+class _PartTimerCalendarTotalPageState extends State<PartTimerCalendarTotalPage> {
   final SalaryApi _salaryApi = SalaryApi();
   List<SalaryMonthly> _monthlySalaries = [];
   List<SalaryDaily> _dailySalaries = []; // 일별 급여 데이터
   Map<DateTime, int> _dailySalaryMap = {}; // 날짜별 급여 맵
 
   final NumberFormat _currencyFormat = NumberFormat('#,###', 'ko_KR');
-
-  // 날짜별 급여 정보를 저장할 Map 추가
-  Map<DateTime, List<SalaryMonthly>> _events = {};
 
   final int tempPno = 1;
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -44,7 +35,6 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
       setState(() {});
     });
 
-    _focusedDay = widget.jobMatching.jmstartDate;
     _selectedDay = _focusedDay;
 
     _loadSalaryData();
@@ -58,31 +48,24 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
         year: _focusedDay.year,
       );
 
-      // 특정 근무지(jpname)로 필터링
-      final filteredSalaries = salaries.where(
-              (salary) => salary.jpname == widget.jobMatching.jpname
-      ).toList();
-
       setState(() {
-        _monthlySalaries = filteredSalaries;
-        _createEvents(filteredSalaries);
+        _monthlySalaries = salaries;
       });
     } catch (e) {
       print('급여 데이터 로드 실패: $e');
     }
   }
 
-  // 일별 급여 데이터 로드
+  // 일별 급여 데이터 로드 - 모든 근무지 포함
   Future<void> _loadDailySalaryData() async {
     try {
       final dailySalaries = await _salaryApi.getDailySalary(
         tempPno,
-        jmno: widget.jobMatching.jmno,
         year: _focusedDay.year,
         month: _focusedDay.month,
       );
 
-      // 날짜별 급여 맵 생성
+      // 날짜별 급여 맵 생성 - 같은 날짜의 급여는 합산
       Map<DateTime, int> dailySalaryMap = {};
       for (var salary in dailySalaries) {
         // 날짜만 추출 (시간 정보 제거)
@@ -91,7 +74,13 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
           salary.workDate.month,
           salary.workDate.day,
         );
-        dailySalaryMap[dateKey] = salary.salary;
+
+        // 같은 날짜에 여러 근무지의 급여가 있을 경우 합산
+        if (dailySalaryMap.containsKey(dateKey)) {
+          dailySalaryMap[dateKey] = dailySalaryMap[dateKey]! + salary.salary;
+        } else {
+          dailySalaryMap[dateKey] = salary.salary;
+        }
       }
 
       setState(() {
@@ -101,23 +90,6 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
     } catch (e) {
       print('일별 급여 데이터 로드 실패: $e');
     }
-  }
-
-  // 급여 데이터를 이벤트로 변환하는 메서드 추가
-  void _createEvents(List<SalaryMonthly> salaries) {
-    _events.clear();
-    for (var salary in salaries) {
-      DateTime date = DateTime(salary.year, salary.month);
-      if (_events[date] == null) {
-        _events[date] = [];
-      }
-      _events[date]!.add(salary);
-    }
-  }
-
-  // 특정 날짜의 이벤트를 가져오는 메서드 추가
-  List<SalaryMonthly> _getEventsForDay(DateTime day) {
-    return _events[DateTime(day.year, day.month)] ?? [];
   }
 
   @override
@@ -134,7 +106,7 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.jobMatching.jpname} 급여'),
+        title: const Text('전체 급여 달력'),
       ),
       body: Column(
         children: [

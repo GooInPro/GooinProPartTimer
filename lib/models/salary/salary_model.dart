@@ -51,3 +51,30 @@ class SalaryJob {
     );
   }
 }
+
+// 일별 급여 모델
+class SalaryDaily {
+  final DateTime workDate;
+  final int hours;
+  final int salary;
+  final String jpname;
+  final int jmno;
+
+  SalaryDaily({
+    required this.workDate,
+    required this.hours,
+    required this.salary,
+    required this.jpname,
+    required this.jmno,
+  });
+
+  factory SalaryDaily.fromJson(Map<String, dynamic> json) {
+    return SalaryDaily(
+      workDate: DateTime.parse(json['workDate']),
+      hours: json['hours'],
+      salary: json['salary'],
+      jpname: json['jpname'],
+      jmno: json['jmno'],
+    );
+  }
+}

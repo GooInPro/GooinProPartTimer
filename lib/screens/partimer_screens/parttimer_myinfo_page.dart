@@ -130,6 +130,13 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
             },
             child: const Text('근무 이력 보기'),
           ),
+          const SizedBox(height: 10), // 버튼 사이 간격 추가
+          ElevatedButton(
+            onPressed: () {
+              context.go('/parttimer/calendartotal'); // 전체 급여 달력 페이지로 이동
+            },
+            child: const Text('급여 달력 보기'),
+          ),
         ],
       ),
     );

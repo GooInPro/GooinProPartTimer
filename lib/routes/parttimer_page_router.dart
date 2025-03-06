@@ -4,6 +4,7 @@ import 'package:gooinpro_parttimer/screens/partimer_screens/parttimer_matchinglo
 import 'package:gooinpro_parttimer/screens/partimer_screens/parttimer_review_page.dart';
 import 'package:gooinpro_parttimer/screens/partimer_screens/parttimer_workdetail_page.dart';
 import 'package:gooinpro_parttimer/screens/partimer_screens/parttimer_calendar_page.dart';
+import 'package:gooinpro_parttimer/screens/partimer_screens/parttimer_calendartotal_page.dart'; // 새로 추가
 import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 
 final GoRoute partTimerPageRoute = GoRoute(
@@ -26,6 +27,10 @@ final GoRoute partTimerPageRoute = GoRoute(
       builder: (context, state) => PartTimerCalendarPage(
         jobMatching: state.extra as JobMatchings,
       ),
+    ),
+    GoRoute(
+      path: 'calendartotal',
+      builder: (context, state) => const PartTimerCalendarTotalPage(),
     ),
     GoRoute(
       path: 'review',
