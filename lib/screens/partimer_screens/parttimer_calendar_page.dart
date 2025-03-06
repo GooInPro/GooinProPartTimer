@@ -3,6 +3,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class PartTimerCalendarPage extends StatefulWidget {
   final JobMatchings jobMatching;  // 근무지 정보
@@ -19,6 +21,7 @@ class PartTimerCalendarPage extends StatefulWidget {
 class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
   final SalaryApi _salaryApi = SalaryApi();
   List<SalaryMonthly> _monthlySalaries = [];
+  final NumberFormat _currencyFormat = NumberFormat('#,###', 'ko_KR');
 
   // 날짜별 급여 정보를 저장할 Map 추가
   Map<DateTime, List<SalaryMonthly>> _events = {};
@@ -33,6 +36,14 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
   @override
   void initState() {
     super.initState();
+
+    initializeDateFormatting('ko_KR', null).then((_) {
+      setState(() {});
+    });
+
+    _focusedDay = widget.jobMatching.jmstartDate;
+    _selectedDay = _focusedDay;
+
     _loadSalaryData();
   }
 
@@ -70,13 +81,46 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 현재 표시된 월의 총액 계산
+    int monthlyTotal = 0;
+    for (var salary in _monthlySalaries) {
+      if (salary.year == _focusedDay.year && salary.month == _focusedDay.month) {
+        monthlyTotal = salary.totalSalary;
+        break;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.jobMatching.jpname} 급여'),
       ),
       body: Column(
         children: [
+          // 월 총액 표시 위젯 추가
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.blue.withOpacity(0.1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${_focusedDay.year}년 ${_focusedDay.month}월 총 급여',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_currencyFormat.format(monthlyTotal)}원',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           TableCalendar(
+            locale: 'ko_KR',
             firstDay: kFirstDay,
             lastDay: kLastDay,
             focusedDay: _focusedDay,
@@ -90,31 +134,21 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
                 _focusedDay = focusedDay;
               });
             },
+            onPageChanged: (focusedDay) {
+              // 페이지가 변경될 때 해당 월의 데이터 로드
+              setState(() {
+                _focusedDay = focusedDay;
+              });
+              _loadSalaryData();
+            },
             onFormatChanged: (format) {
               setState(() {
                 _calendarFormat = format;
               });
             },
 
-            // calendarBuilders 추가
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                final salaries = _getEventsForDay(date);
-                if (salaries.isNotEmpty) {
-                  return Positioned(
-                    bottom: 1,
-                    child: Text(
-                      '${salaries[0].totalSalary}원',
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  );
-                }
-                return null;
-              },
-            ),
+            // 마커 빌더 제거 - 날짜별 표시 없앰
+            calendarBuilders: CalendarBuilders(),
 
             calendarStyle: const CalendarStyle(
               outsideDaysVisible: false,
@@ -129,4 +163,3 @@ class _PartTimerCalendarPageState extends State<PartTimerCalendarPage> {
     );
   }
 }
-

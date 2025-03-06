@@ -3,6 +3,7 @@ import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
+import 'package:intl/intl.dart';
 
 class PartTimerWorkDetailPage extends StatefulWidget {
   final JobMatchings jobMatching;
@@ -20,6 +21,7 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
   SalaryJob? salaryInfo;
   bool isLoading = true;
   final SalaryApi _salaryApi = SalaryApi();
+  final NumberFormat _currencyFormat = NumberFormat('#,###', 'ko_KR');
 
   @override
   void initState() {
@@ -120,7 +122,7 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
                         '근무 시간',
                         '${_formatTime(widget.jobMatching.jmworkStartTime!)} ~ ${_formatTime(widget.jobMatching.jmworkEndTime!)}',
                       ),
-                    _buildInfoRow('시급', '${widget.jobMatching.jmhourlyRate}원'),
+                    _buildInfoRow('시급', '${_currencyFormat.format(widget.jobMatching.jmhourlyRate)}원'),
                     _buildInfoRow('계약 시작일', widget.jobMatching.jmstartDate.toString().split(' ')[0]),
                     if (widget.jobMatching.jmendDate != null)
                       _buildInfoRow('계약 종료일', widget.jobMatching.jmendDate.toString().split(' ')[0]),
@@ -152,7 +154,7 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
                       Column(
                         children: [
                           _buildInfoRow('총 근무 시간', '${salaryInfo!.totalHours}시간'),
-                          _buildInfoRow('총 급여', '${salaryInfo!.totalSalary}원'),
+                          _buildInfoRow('총 급여', '${_currencyFormat.format(salaryInfo!.totalSalary)}원'),
                           _buildInfoRow('근무 기간',
                               '${salaryInfo!.startDate.toString().split(' ')[0]} ~ ${salaryInfo!.endDate.toString().split(' ')[0]}'),
                         ],
