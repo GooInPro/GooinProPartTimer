@@ -7,6 +7,9 @@ import 'package:gooinpro_parttimer/services/api/parttimerapi/parttimer_api.dart'
 import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_header.dart';
 import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_section.dart';
 import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_edit.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class PartTimerMyInfoPage extends StatefulWidget {
   const PartTimerMyInfoPage({super.key});
@@ -20,9 +23,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
   PartTimer? _partTimer;
   bool _isLoading = true;
 
-  // 임시로 pno 값 하드 코딩!!!!!!!!!!!!!!
-  // TODO: Provider 구현 후 제거 예정
-  final int tempPno = 1;
+  late UserProvider userProvider; // provider 1
 
   @override
   void initState() {
@@ -30,9 +31,15 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
     _loadPartTimerInfo();
   }
 
+  @override // provider 2
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userProvider = context.read<UserProvider>();
+  }
+
   Future<void> _loadPartTimerInfo() async {
     try {
-      final partTimer = await _partTimerApi.getPartTimerDetail(tempPno);
+      final partTimer = await _partTimerApi.getPartTimerDetail(userProvider.pno!);
       setState(() {
         _partTimer = partTimer;
         _isLoading = false;
@@ -56,7 +63,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
             onSave: (updatedPartTimer) async {
               try {
                 await _partTimerApi.editPartTimerInfo(
-                    tempPno, updatedPartTimer);
+                    userProvider.pno!, updatedPartTimer);
                 // 수정 성공 후 정보 다시 로드
                 await _loadPartTimerInfo();
                 if (mounted) {

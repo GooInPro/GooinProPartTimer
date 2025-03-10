@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+
+import '../../providers/user_provider.dart';
 
 class PartTimerCalendarTotalPage extends StatefulWidget {
   const PartTimerCalendarTotalPage({super.key});
@@ -18,9 +21,10 @@ class _PartTimerCalendarTotalPageState extends State<PartTimerCalendarTotalPage>
   List<SalaryDaily> _dailySalaries = []; // 일별 급여 데이터
   Map<DateTime, int> _dailySalaryMap = {}; // 날짜별 급여 맵
 
+  late UserProvider userProvider; // provider 1
+
   final NumberFormat _currencyFormat = NumberFormat('#,###', 'ko_KR');
 
-  final int tempPno = 1;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -41,10 +45,16 @@ class _PartTimerCalendarTotalPageState extends State<PartTimerCalendarTotalPage>
     _loadDailySalaryData(); // 일별 급여 데이터 로드
   }
 
+  @override // provider 2
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userProvider = context.read<UserProvider>();
+  }
+
   Future<void> _loadSalaryData() async {
     try {
       final salaries = await _salaryApi.getMonthlySalary(
-        tempPno,
+        userProvider.pno!,
         year: _focusedDay.year,
       );
 
@@ -60,7 +70,7 @@ class _PartTimerCalendarTotalPageState extends State<PartTimerCalendarTotalPage>
   Future<void> _loadDailySalaryData() async {
     try {
       final dailySalaries = await _salaryApi.getDailySalary(
-        tempPno,
+        userProvider.pno!,
         year: _focusedDay.year,
         month: _focusedDay.month,
       );

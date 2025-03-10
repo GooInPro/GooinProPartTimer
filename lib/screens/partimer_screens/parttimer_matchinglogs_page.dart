@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/services/api/parttimerapi/parttimer_api.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class PartTimerMatchingLogsPage extends StatefulWidget {
   const PartTimerMatchingLogsPage({super.key});
@@ -16,7 +19,7 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
   List<JobMatchings>? _pastJobs;
   bool _isLoading = true;
 
-  final int tempPno = 1;  // TODO: Provider 구현 후 제거 예정
+  late UserProvider userProvider; // provider 1
 
   @override
   void initState() {
@@ -24,10 +27,16 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
     _loadJobMatchings();
   }
 
+  @override // provider 2
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userProvider = context.read<UserProvider>();
+  }
+
   Future<void> _loadJobMatchings() async {
     try {
-      final currentJobs = await _partTimerApi.getCurrentJobs(tempPno);
-      final pastJobs = await _partTimerApi.getPastJobs(tempPno);
+      final currentJobs = await _partTimerApi.getCurrentJobs(userProvider.pno!);
+      final pastJobs = await _partTimerApi.getPastJobs(userProvider.pno!);
 
       setState(() {
         _currentJobs = currentJobs;
