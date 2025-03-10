@@ -124,4 +124,27 @@ class PartTimerApi {
       throw Exception('과거 근무지 목록 조회 중 오류 발생: $e');
     }
   }
+
+// 근무지 상세 조회
+  Future<JobMatchings> getJobDetail(int jmno) async {
+    try {
+      final apiUrl = '$baseUrl/log/detail?jmno=$jmno';
+      print('요청 URL: $apiUrl');
+
+      final response = await http.get(Uri.parse(apiUrl));
+      print('응답 상태 코드: ${response.statusCode}');
+      print('응답 데이터: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final String decodedResponse = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> json = jsonDecode(decodedResponse);
+        return JobMatchings.fromJson(json);
+      } else {
+        throw Exception('근무지 상세 정보 로드 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('API 호출 중 오류 발생: $e');
+      throw Exception('근무지 상세 정보 조회 중 오류 발생: $e');
+    }
+  }
 }
