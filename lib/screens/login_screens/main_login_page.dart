@@ -53,28 +53,30 @@ class _MainLoginPageState extends State<MainLoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: handleKakaoLogin, // 카카오 로그인
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0), // 왼쪽, 오른쪽 여백 추가
-                child: Image.asset(
-                  'assets/image/kakao_login.png',
-                ),
+            TextButton(
+              onPressed: handleKakaoLogin,
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero, // 여백 제거
+                minimumSize: Size.zero, // 최소 크기 제거
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 터치 영역 최소화
+              ),
+              child: Image.asset(
+                'assets/image/kakao_login.png',
               ),
             ),
             SizedBox(height: 20), // 버튼 간 간격
-            ElevatedButton(
-              onPressed: handleNaverLogin, // 네이버 로그인
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0), // 왼쪽, 오른쪽 여백 추가
-                child: Image.asset(
-                  'assets/image/naver_login.png',
-                  width: 200, // 원하는 크기로 조절
-                  height: 50, // 원하는 크기로 조절
-                  fit: BoxFit.contain, // 이미지 비율 유지하며 크기 조정
-                ),
+            TextButton(
+              onPressed: handleNaverLogin,
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Image.asset(
+                'assets/image/naver_login.png',
+                width: 200,
+                height: 50,
+                fit: BoxFit.contain,
               ),
             ),
           ],
