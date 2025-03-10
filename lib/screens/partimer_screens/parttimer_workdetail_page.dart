@@ -4,6 +4,9 @@ import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class PartTimerWorkDetailPage extends StatefulWidget {
   final JobMatchings jobMatching;
@@ -23,20 +26,25 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
   final SalaryApi _salaryApi = SalaryApi();
   final NumberFormat _currencyFormat = NumberFormat('#,###', 'ko_KR');
 
+  late UserProvider userProvider; // provider 1
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override // provider 2
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userProvider = context.read<UserProvider>();
+
     _loadSalaryInfo();
   }
 
   Future<void> _loadSalaryInfo() async {
     try {
-      // 하드코딩된 pno 값 사용
-      const int pno = 1;
 
-      print('급여 정보 로드 시작 - pno: $pno, jpname: ${widget.jobMatching.jpname}');
-
-      final salaryJobs = await _salaryApi.getSalaryByJobs(pno);
+      final salaryJobs = await _salaryApi.getSalaryByJobs(userProvider.pno!);
       print('API에서 가져온 급여 정보 수: ${salaryJobs.length}');
 
       // 현재 근무지와 일치하는 급여 정보 찾기
