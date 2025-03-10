@@ -90,10 +90,13 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _onClickSend() async {
+    final loginProvider = Provider.of<UserProvider>(context, listen: false);
+
     login_api api = login_api();
     print("이메일: ${registerData.pemail}");
     LoginResponse response = await api.registerUser(registerData);
     print(response.accessToken);
+    loginProvider.updateUserData(response.pno, response.pemail, response.pname, response.accessToken, response.refreshToken);
     uploadFiles(context, _imagesProfile, _imagesDocument);
     context.go('/jobposting');
   }
