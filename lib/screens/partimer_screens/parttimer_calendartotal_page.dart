@@ -40,15 +40,15 @@ class _PartTimerCalendarTotalPageState extends State<PartTimerCalendarTotalPage>
     });
 
     _selectedDay = _focusedDay;
-
-    _loadSalaryData();
-    _loadDailySalaryData(); // 일별 급여 데이터 로드
   }
 
   @override // provider 2
   void didChangeDependencies() {
     super.didChangeDependencies();
     userProvider = context.read<UserProvider>();
+
+    _loadSalaryData();
+    _loadDailySalaryData(); // 일별 급여 데이터 로드
   }
 
   Future<void> _loadSalaryData() async {

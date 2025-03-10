@@ -28,13 +28,13 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
   @override
   void initState() {
     super.initState();
-    _loadPartTimerInfo();
   }
 
   @override // provider 2
   void didChangeDependencies() {
     super.didChangeDependencies();
     userProvider = context.read<UserProvider>();
+    _loadPartTimerInfo();
   }
 
   Future<void> _loadPartTimerInfo() async {

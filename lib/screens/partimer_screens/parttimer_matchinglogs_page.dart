@@ -24,13 +24,14 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
   @override
   void initState() {
     super.initState();
-    _loadJobMatchings();
   }
 
   @override // provider 2
   void didChangeDependencies() {
     super.didChangeDependencies();
     userProvider = context.read<UserProvider>();
+
+    _loadJobMatchings();
   }
 
   Future<void> _loadJobMatchings() async {

@@ -31,13 +31,14 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
   @override
   void initState() {
     super.initState();
-    _loadSalaryInfo();
   }
 
   @override // provider 2
   void didChangeDependencies() {
     super.didChangeDependencies();
     userProvider = context.read<UserProvider>();
+
+    _loadSalaryInfo();
   }
 
   Future<void> _loadSalaryInfo() async {
