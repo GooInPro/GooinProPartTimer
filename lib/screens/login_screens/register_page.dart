@@ -90,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
     // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
-    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
+    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/profile');
 
     parttimerImage data = parttimerImage(pifilename: fileNames, pno: pno);
 
@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> uploadDcoumentFiles(BuildContext context, List<File> documentImages, int pno) async { // 보건증 및 기타 서류 업로드
 
     // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
-    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/document');
+    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: '$baseUrl/upload/api/partTimer/document');
 
     parttimerDocumentImage data = parttimerDocumentImage(pdifilename: fileNames, pno: pno);
 
