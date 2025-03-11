@@ -85,8 +85,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
     // FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: '$baseUrl/upload/api/partTimer/profile'); 안드로이드 용
-     FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/document');
-     FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
+    FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/document');
+    FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
   }
 
   void _onClickSend() async {
