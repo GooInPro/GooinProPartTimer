@@ -15,6 +15,7 @@ class chat_api {
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes); // 응답을 UTF-8로 디코딩
+        print(decodedResponse);
         final List<dynamic> data = json.decode(decodedResponse);
 
         return data.map((item) => ChatRoomListModel.fromJson(item)).toList();
