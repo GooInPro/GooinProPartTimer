@@ -209,7 +209,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                     ElevatedButton.icon(
                       onPressed: _uploadImage,
                       icon: const Icon(Icons.upload),
-                      label: const Text('이미지 업로드'),
+                      label: const Text('프로필 이미지 변경'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green.shade600,
                         foregroundColor: Colors.white,
