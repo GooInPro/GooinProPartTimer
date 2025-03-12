@@ -61,7 +61,7 @@ class _InOutWorkListPageState extends State<InOutWorkListPage> {
         backgroundColor: Colors.blueAccent,
       ),
       body: workList.isEmpty
-          ? Center(child: CircularProgressIndicator()) // 로딩 중일 때 표시
+          ? Center(child: Text("현재 근무중인 알바가 없습니다."),) // 로딩 중일 때 표시
           : ListView.builder(
         itemCount: workList.length,
         itemBuilder: (context, index) {
