@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
+import 'package:gooinpro_parttimer/models/page/pageresponse_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
-import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
+import 'package:gooinpro_parttimer/utils/navermap_util.dart';
+
+import '../../widget/page_widgets/pagination.dart';  // navermap_util 임포트
 
 class JobPostingsPage extends StatefulWidget {
   @override
@@ -13,6 +16,12 @@ class JobPostingsPage extends StatefulWidget {
 class _JobPostingsState extends State<JobPostingsPage> {
   bool _isLoading = true; // 로딩 상태
   List<JobPosting> jobPlaceList = [];
+  int currentPage = 1; // 현재 페이지 페이지네이션 必
+  int totalPages = 1; // 총 페이지 수 페이지네이션 必
+  jobpostings_api jobpostingapi = jobpostings_api();
+  bool prev = false; // 페이지네이션 必
+  bool next = false; // 페이지네이션 必
+
 
   @override
   void initState() {
@@ -24,11 +33,19 @@ class _JobPostingsState extends State<JobPostingsPage> {
 
   // 직업 공고 데이터를 가져오는 함수
   Future<void> _fetchJobPosting() async {
-    List<JobPosting> jobList = await jobpostings_api().getJobPostingsList();
+    PageResponseDTO pageResponse = await jobpostingapi.getJobPostingsList(currentPage); // pageResponseDTO 페이지네이션 必
+
+    List<JobPosting> jobList = pageResponse.dtoList;
+    int totalPages = pageResponse.totalPage; // 페이지네이션 必
+
     if (mounted) {
       setState(() {
         jobPlaceList = jobList;
+        print(jobPlaceList.length);
         _isLoading = false; // 로딩 완료
+        this.totalPages = totalPages; // 페이지네이션 必
+        this.prev = pageResponse.prev; // 페이지네이션 必
+        this.next = pageResponse.next; // 페이지네이션 必
         jobList.forEach((job) {
           double? wlati = job.wlati;
           double? wlong = job.wlong;
@@ -41,6 +58,13 @@ class _JobPostingsState extends State<JobPostingsPage> {
         });
       });
     }
+  }
+
+  void onPageChange(int newpage) { // 페이지네이션 必
+    setState(() {
+      currentPage = newpage;
+      _fetchJobPosting();
+    });
   }
 
   @override
@@ -96,6 +120,12 @@ class _JobPostingsState extends State<JobPostingsPage> {
                 ),
               ),
             ),
+            Pagination( // 페이지네이션 必
+              currentPage: currentPage,
+              totalPages: totalPages,
+              prev: prev,
+              next: next,
+              onPageChanged: onPageChange)
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:gooinpro_parttimer/models/page/pageresponse_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_start_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,10 +11,10 @@ import '../../../models/jobpostings_application/jobpostings_application_model.da
 class jobpostings_api {
   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
 
-  Future<List<JobPosting>> getJobPostingsList({int page = 1, int size = 10}) async {
+  Future<PageResponseDTO> getJobPostingsList(int page) async {
     print(baseUrl);
     try {
-      final response = await http.get(Uri.parse('$baseUrl/jobposting/list?page=$page&size=$size'));
+      final response = await http.get(Uri.parse('$baseUrl/jobposting/list?page=$page'));
 
       // 서버 응답이 UTF-8로 잘 디코딩되어 있지 않으면 수동으로 디코딩
       if (response.statusCode == 200) {
@@ -23,8 +24,13 @@ class jobpostings_api {
         print(jsonResponse);
         final List<dynamic> data = jsonResponse['dtoList']; // PageResponseDTO의 content
         print("-----2");
+        final int totalPage = jsonResponse['totalPage'];
+        final bool prev = jsonResponse['prev'];
+        final bool next = jsonResponse['next'];
 
-        return data.map((item) => JobPosting.fromJson(item)).toList();
+        print(PageResponseDTO.fromJson(jsonResponse));
+
+        return PageResponseDTO.fromJson(jsonResponse);
       } else {
         throw Exception('Failed to load workplace list: ${response.statusCode}');
       }
