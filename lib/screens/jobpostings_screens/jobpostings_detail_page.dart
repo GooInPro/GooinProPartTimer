@@ -26,14 +26,31 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
   }
 
   Future<void> _fetchJobPostingDetail() async {
-    List<JobPostingDetail> jobDetails = await jobpostings_api().getJobPostingsDetail(widget.jpno);
-    if (mounted) {
-      setState(() {
-        jobDetailList = jobDetails;
-        _isLoading = false; // 로딩 완료
-        print("--------------job detail");
-        workingDays = JobPostingDetail.workDays(jobDetails[0].jpworkDays ?? "");
-      });
+    try {
+      List<JobPostingDetail> jobDetails = await jobpostings_api().getJobPostingsDetail(widget.jpno);
+      if (mounted) {
+        setState(() {
+          jobDetailList = jobDetails;
+          _isLoading = false;
+
+          if (jobDetails.isNotEmpty) {
+            print("--------------job detail");
+            workingDays = JobPostingDetail.workDays(jobDetails[0].jpworkDays ?? "");
+          } else {
+            workingDays = [];
+            print("빈 리스트 반환됨");
+          }
+        });
+      }
+    } catch (e) {
+      print('Error fetching job details: $e');
+      if (mounted) {
+        setState(() {
+          jobDetailList = [];
+          workingDays = [];
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -107,6 +124,26 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                 backgroundColor: Colors.blue, // 버튼 배경색
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8), // 둥근 모서리
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (jobDetailList.isNotEmpty) {
+                  context.go('/review/jobpostings/${jobDetailList[0].eno}');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('공고 정보를 불러올 수 없습니다.')),
+                  );
+                }
+              },
+              child: const Text('공고업체 리뷰 보기'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                textStyle: TextStyle(fontSize: 18),
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),

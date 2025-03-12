@@ -10,7 +10,7 @@ class ReviewApi {
   Future<void> createReview(Review review) async {
     try {
       final response = await http.put(
-          Uri.parse('$baseUrl/part/api/v1/employee/review/create'),
+          Uri.parse('$baseUrl/employee/review/create'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(review.toJson())
       );
@@ -25,26 +25,51 @@ class ReviewApi {
     }
   }
 
-  // 리뷰 목록 조회
-  Future<List<Review>> getReviewList({String? keyword}) async {
+  // 리뷰 목록 조회 (키워드, 고용주 ID, 파트타이머 ID로 필터링)
+  Future<List<Review>> getReviewList({String? keyword, int? eno, int? pno}) async {
     try {
-      final queryParams = keyword != null ? {'keyword': keyword} : null;
+      // 쿼리 파라미터 로깅
+      print('리뷰 목록 조회 파라미터: keyword=$keyword, eno=$eno, pno=$pno');
+
+      // 쿼리 파라미터 구성
+      final queryParams = <String, String>{};
+      if (keyword != null) queryParams['keyword'] = keyword;
+      if (eno != null) queryParams['eno'] = eno.toString();
+      if (pno != null) queryParams['pno'] = pno.toString();
+
       final uri = Uri.parse('$baseUrl/part/api/v1/employee/review/list')
           .replace(queryParameters: queryParams);
 
+      print('리뷰 목록 조회 URL: $uri');
       final response = await http.get(uri);
+      print('응답 상태 코드: ${response.statusCode}');
+      print('응답 본문: ${response.body}');
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes);
-        final List<dynamic> jsonResponse = json.decode(decodedResponse);
-        print('Review List Response: $jsonResponse');
+        print('디코딩된 응답: $decodedResponse');
 
-        return jsonResponse.map((json) => Review.fromJson(json)).toList();
+        // JSON 파싱 전 로그
+        try {
+          final List<dynamic> jsonResponse = json.decode(decodedResponse);
+          print('파싱된 JSON: $jsonResponse');
+
+          // 각 항목 디버깅
+          final reviews = jsonResponse.map((json) {
+            print('리뷰 항목: $json');
+            return Review.fromJson(json);
+          }).toList();
+
+          return reviews;
+        } catch (e) {
+          print('JSON 파싱 오류: $e');
+          throw Exception('Error parsing review data: $e');
+        }
       } else {
         throw Exception('Failed to load review list: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching review list: $e');
+      print('리뷰 목록 조회 오류: $e');
       throw Exception('Error fetching review list: $e');
     }
   }

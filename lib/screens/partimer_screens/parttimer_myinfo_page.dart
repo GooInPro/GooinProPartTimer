@@ -283,9 +283,17 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       ),
                     ),
+                    ElevatedButton(
+                      onPressed: () => context.go('/review/mylist'),
+                      child: const Text('내 리뷰 보기'),
+                      style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                    ),
                   ],
                 ),
               ],
+
             ),
           ),
         ],

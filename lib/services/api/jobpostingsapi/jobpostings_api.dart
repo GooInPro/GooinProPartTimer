@@ -36,21 +36,24 @@ class jobpostings_api {
   Future<List<JobPostingDetail>> getJobPostingsDetail(int jpno) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/jobposting/detail/$jpno'));
+      print('API 응답 상태 코드: ${response.statusCode}');
+      print('API 응답 본문: ${response.body}');
 
       if (response.statusCode == 200) {
         final String decodedResponse = utf8.decode(response.bodyBytes);
+        print('디코딩된 응답: $decodedResponse');
         final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
+        print('파싱된 JSON: $jsonResponse');
 
-        print(jsonResponse);
         final JobPostingDetail jobDetail = JobPostingDetail.fromJson(jsonResponse);
-
         return [jobDetail];
       } else {
+        print('API 오류: ${response.statusCode}');
         throw Exception('Failed to load job posting detail: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching job posting detail: $e');
-      return []; // **오류 발생 시 빈 리스트 반환**
+      throw e; // 오류를 던져서 호출자가 처리하도록 함
     }
   }
 
