@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_model.dart';
 import 'package:gooinpro_parttimer/models/page/pageresponse_model.dart';
 import 'package:gooinpro_parttimer/services/api/jobpostingsapi/jobpostings_api.dart';
-import 'package:gooinpro_parttimer/utils/navermap_util.dart';  // navermap_util 임포트
+import 'package:gooinpro_parttimer/utils/navermap_util.dart';
+
+import '../../widget/page_widgets/pagination.dart';  // navermap_util 임포트
 
 class JobPostingsPage extends StatefulWidget {
   @override
@@ -14,11 +16,11 @@ class JobPostingsPage extends StatefulWidget {
 class _JobPostingsState extends State<JobPostingsPage> {
   bool _isLoading = true; // 로딩 상태
   List<JobPosting> jobPlaceList = [];
-  int currentPage = 1; // 현재 페이지
-  int totalPages = 1; // 총 페이지 수
+  int currentPage = 1; // 현재 페이지 페이지네이션 必
+  int totalPages = 1; // 총 페이지 수 페이지네이션 必
   jobpostings_api jobpostingapi = jobpostings_api();
-  bool prev = false;
-  bool next = false;
+  bool prev = false; // 페이지네이션 必
+  bool next = false; // 페이지네이션 必
 
 
   @override
@@ -31,20 +33,19 @@ class _JobPostingsState extends State<JobPostingsPage> {
 
   // 직업 공고 데이터를 가져오는 함수
   Future<void> _fetchJobPosting() async {
-    PageResponseDTO pageResponse = await jobpostingapi.getJobPostingsList(currentPage);
+    PageResponseDTO pageResponse = await jobpostingapi.getJobPostingsList(currentPage); // pageResponseDTO 페이지네이션 必
 
     List<JobPosting> jobList = pageResponse.dtoList;
-    int totalPages = pageResponse.totalPage;
-
-    this.prev = pageResponse.prev;
-    this.next = pageResponse.next;
+    int totalPages = pageResponse.totalPage; // 페이지네이션 必
 
     if (mounted) {
       setState(() {
         jobPlaceList = jobList;
         print(jobPlaceList.length);
         _isLoading = false; // 로딩 완료
-        this.totalPages = totalPages;
+        this.totalPages = totalPages; // 페이지네이션 必
+        this.prev = pageResponse.prev; // 페이지네이션 必
+        this.next = pageResponse.next; // 페이지네이션 必
         jobList.forEach((job) {
           double? wlati = job.wlati;
           double? wlong = job.wlong;
@@ -59,54 +60,11 @@ class _JobPostingsState extends State<JobPostingsPage> {
     }
   }
 
-  // 페이지네이션 UI를 구성하는 함수
-  Widget buildPagination() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (prev)
-        // Previous button
-        IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: currentPage > 1 ? () {
-            setState(() {
-              currentPage--;
-              _fetchJobPosting(); // 이전 페이지의 직업 공고 불러오기
-            });
-          } : null,
-        ),
-
-        // Page number buttons
-        for (int i = 1; i <= totalPages; i++)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  currentPage = i;
-                  _fetchJobPosting(); // 선택한 페이지의 직업 공고 불러오기
-                });
-              },
-              child: Text('$i'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: currentPage == i ? Colors.white : Colors.blueAccent, backgroundColor: currentPage == i ? Colors.blueAccent : Colors.white,
-              ),
-            ),
-          ),
-
-        // Next button
-        if(next)
-        IconButton(
-          icon: Icon(Icons.arrow_forward),
-          onPressed: currentPage < totalPages ? () {
-            setState(() {
-              currentPage++;
-              _fetchJobPosting(); // 다음 페이지의 직업 공고 불러오기
-            });
-          } : null,
-        ),
-      ],
-    );
+  void onPageChange(int newpage) { // 페이지네이션 必
+    setState(() {
+      currentPage = newpage;
+      _fetchJobPosting();
+    });
   }
 
   @override
@@ -162,7 +120,12 @@ class _JobPostingsState extends State<JobPostingsPage> {
                 ),
               ),
             ),
-            buildPagination(),
+            Pagination( // 페이지네이션 必
+              currentPage: currentPage,
+              totalPages: totalPages,
+              prev: prev,
+              next: next,
+              onPageChanged: onPageChange)
           ],
         ),
       ),
