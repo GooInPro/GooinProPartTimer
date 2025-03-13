@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/jobpostings/jobpostings_image_model.dart';
@@ -20,6 +21,7 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
   List<String> workingDays = [];
   List<jobPostingsImage> imageList = [];
   jobpostings_api jopostingsapi = jobpostings_api();
+  final String baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST_NGINX'] ?? 'No API host found';
 
 
   @override
@@ -41,6 +43,7 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
         workingDays = jobDetails.isNotEmpty ? JobPostingDetail.workDays(jobDetails[0].jpworkDays ?? "") : [];
         print("mounted------------------");
         print(imageList.isNotEmpty ? imageList[0].jpifilename[0] : '등록된 이미지 없음');
+        print(baseUrl);
       });
     }
   }
@@ -74,7 +77,7 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                   decoration: BoxDecoration(
                     image: imageList.isNotEmpty && imageList[0].jpifilename.isNotEmpty
                         ? DecorationImage(
-                      image: NetworkImage('http://localhost/jobPosting/${imageList[0].jpifilename[0]}'),
+                      image: NetworkImage('${baseUrl}/${imageList[0].jpifilename[0]}'),
                       fit: BoxFit.cover,
                     )
                         : null,
