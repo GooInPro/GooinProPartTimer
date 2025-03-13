@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/models/jobmatchings/work_tims_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_real_time_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_start_model.dart';
@@ -114,6 +113,8 @@ class _InOutPageState extends State<InOutPage> {
         return '결근';
       case 4:
         return '지각/조퇴';
+      case 5:
+        return '출근이전';
       default:
         return '출근이전';
     }
@@ -188,15 +189,15 @@ class _InOutPageState extends State<InOutPage> {
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 출근/퇴근 버튼
-            inOutButton,
-
-            SizedBox(height: 30),
-
+            Text('정규 출퇴근 시간', style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
             // 출근 시간과 퇴근 시간 (박스로 묶기)
-            Container(
+            Center(
+              child: Container(
+              width: MediaQuery.of(context).size.width / 2 ,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.lightBlue[50],
@@ -213,6 +214,7 @@ class _InOutPageState extends State<InOutPage> {
                         : '',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
+                  Text('-',style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                   Text(
                     workTimes?.jmworkEndTim != null
                         ? DateFormat('HH:mm').format(workTimes!.jmworkEndTim!)
@@ -222,11 +224,13 @@ class _InOutPageState extends State<InOutPage> {
                 ],
               ),
             ),
+            ),
 
             SizedBox(height: 20),
-
+            Text('본인 출퇴근 시간', style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
             // 실제 출근 시간과 퇴근 시간 (박스로 묶기)
             Container(
+              width: MediaQuery.of(context).size.width / 2 ,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.lightBlue[50],
@@ -242,6 +246,7 @@ class _InOutPageState extends State<InOutPage> {
                         : '',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
+                  Text('-',style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                   Text(
                     realTime?.wlendTime != null
                         ? DateFormat('HH:mm').format(realTime!.wlendTime!)
@@ -255,18 +260,14 @@ class _InOutPageState extends State<InOutPage> {
             SizedBox(height: 20),
 
             // 출근 상태 (출근 상태도 박스로 묶기)
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.lightBlue[50],
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.lightBlue, width: 2),
-              ),
-              child: Text(
-                getWorkStatusString(realTime?.wlworkStatus ?? 0),
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+            // 출근 상태 (출근 상태도 박스로 묶기)
+            Text(
+              getWorkStatusString(realTime?.wlworkStatus ?? 5),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
+
+            SizedBox(height: 30),
+            inOutButton,
           ],
         ),
       ),
