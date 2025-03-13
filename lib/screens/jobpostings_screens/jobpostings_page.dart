@@ -86,46 +86,52 @@ class _JobPostingsState extends State<JobPostingsPage> {
             // 직업 공고 목록
             Expanded(
               child: SingleChildScrollView(
-                child: DataTable(
-                  columnSpacing: 20.0,
-                  columns: const [
-                    DataColumn(label: Text('공고명', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('주소', style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text('시급', style: TextStyle(fontWeight: FontWeight.bold))),
-                  ],
-                  rows: jobPlaceList.map((job) {
-                    TextStyle fontsize = TextStyle(fontSize: 12);
-
-                    void navigateToDetail() {
-                      context.go('/jobposting/${job.jpno}');
-                    }
-
-                    return DataRow(
-                      cells: [
-                        DataCell(
-                          Text(job.jpname, style: fontsize),
-                          onTap: navigateToDetail,
-                        ),
-                        DataCell(
-                          Text(job.wroadAddress ?? '주소 없음', style: fontsize),
-                          onTap: navigateToDetail,
-                        ),
-                        DataCell(
-                          Text("${job.jphourlyRate}원", style: fontsize),
-                          onTap: navigateToDetail,
-                        ),
+                child: Column(
+                  children: [
+                    DataTable(
+                      columnSpacing: 20.0,
+                      columns: const [
+                        DataColumn(label: Text('공고명', style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(label: Text('주소', style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(label: Text('시급', style: TextStyle(fontWeight: FontWeight.bold))),
                       ],
-                    );
-                  }).toList(),
+                      rows: jobPlaceList.map((job) {
+                        TextStyle fontsize = TextStyle(fontSize: 12);
+
+                        void navigateToDetail() {
+                          context.go('/jobposting/${job.jpno}');
+                        }
+
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                              Text(job.jpname, style: fontsize),
+                              onTap: navigateToDetail,
+                            ),
+                            DataCell(
+                              Text(job.wroadAddress ?? '주소 없음', style: fontsize),
+                              onTap: navigateToDetail,
+                            ),
+                            DataCell(
+                              Text("${job.jphourlyRate}원", style: fontsize),
+                              onTap: navigateToDetail,
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 20),
+                    Pagination( // 페이지네이션 必
+                      currentPage: currentPage,
+                      totalPages: totalPages,
+                      prev: prev,
+                      next: next,
+                      onPageChanged: onPageChange,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Pagination( // 페이지네이션 必
-              currentPage: currentPage,
-              totalPages: totalPages,
-              prev: prev,
-              next: next,
-              onPageChanged: onPageChange)
           ],
         ),
       ),
