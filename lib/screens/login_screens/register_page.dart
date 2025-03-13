@@ -10,9 +10,13 @@ import 'package:gooinpro_parttimer/utils/file_upload_util.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../models/images/parttimer_document_image_model.dart';
+import '../../models/images/parttimer_image_model.dart';
 import '../../models/login/login_register_model.dart';
 import '../../models/login/login_response_model.dart';
 import '../../providers/user_provider.dart';
+import '../../services/api/imageapi/parttimer_document_image_api.dart';
+import '../../services/api/imageapi/parttimer_image_api.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -26,6 +30,9 @@ class _RegisterPageState extends State<RegisterPage> {
   List<File> _imagesDocument = [];
   final picker = ImagePicker();
   final String baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'No API host found';
+  login_api api = login_api();
+  parttimerImageApi imageApi = parttimerImageApi();
+  parttimerDocumentImageApi documentApi = parttimerDocumentImageApi();
 
   @override
   void initState() {
@@ -79,25 +86,50 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 
-  Future<void> uploadFiles(BuildContext context, List<File> profileImages, List<File> documentImages) async {
-    if (_imagesProfile == null){
-      return;
-    }
+  Future<void> uploadProFiles(BuildContext context, List<File> profileImages, int pno) async { // 증명사진 업로드
+
+
     // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
-    // FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: '$baseUrl/upload/api/partTimer/profile'); 안드로이드 용
-    FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: 'http://localhost:8085/upload/api/partTimer/document');
-    FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: 'http://localhost:8085/upload/api/partTimer/profile');
+    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/profile');
+
+    parttimerImage data = parttimerImage(pifilename: fileNames, pno: pno);
+
+    print("---------------- upload profiles");
+    print(data.pifilename);
+
+    registerprofile(data); // 파일 정보 저장 API 호출
+
+
+  }
+
+  Future<void> uploadDcoumentFiles(BuildContext context, List<File> documentImages, int pno) async { // 보건증 및 기타 서류 업로드
+
+    // FileUploadUtil.uploadFile(context: context, images: _imagesProfile!, uri: '$baseUrl/upload/api/partTimer/document'); 안드로이드 용
+    List<String> fileNames = await FileUploadUtil.uploadFile(context: context, images: _imagesDocument!, uri: '$baseUrl/upload/api/partTimer/document');
+
+    parttimerDocumentImage data = parttimerDocumentImage(pdifilename: fileNames, pno: pno);
+
+    registerdocument(data);
+  }
+
+  Future<void> registerprofile(parttimerImage data) async {
+    await imageApi.addPartTimerImage(data);
+  }
+
+  Future<void> registerdocument(parttimerDocumentImage data) async {
+    await documentApi.addPartTimerDocumentImage(data);
   }
 
   void _onClickSend() async {
     final loginProvider = Provider.of<UserProvider>(context, listen: false);
 
-    login_api api = login_api();
-    print("이메일: ${registerData.pemail}");
     LoginResponse response = await api.registerUser(registerData);
-    print(response.accessToken);
     loginProvider.updateUserData(response.pno, response.pemail, response.pname, response.accessToken, response.refreshToken);
-    uploadFiles(context, _imagesProfile, _imagesDocument);
+
+    uploadProFiles(context, _imagesProfile, response.pno);
+    uploadDcoumentFiles(context, _imagesDocument, response.pno);
+
+
     context.go('/jobposting');
   }
 
