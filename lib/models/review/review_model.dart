@@ -6,6 +6,7 @@ class Review {
   final String rcontent;
   final DateTime rregdate;
   final bool rdelete;
+  final String jpname;
 
   Review({
     required this.rno,
@@ -15,6 +16,7 @@ class Review {
     required this.rcontent,
     required this.rregdate,
     this.rdelete = false,
+    this.jpname = '',
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class Review {
             ? DateTime.parse(json['rregdate'])
             : DateTime.now(),
         rdelete: json['rdelete'] ?? false,
+        jpname: json['jpname'] ?? '',
       );
     } catch (e) {
       print('Review.fromJson 오류: $e');

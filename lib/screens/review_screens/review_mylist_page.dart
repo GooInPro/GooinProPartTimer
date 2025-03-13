@@ -62,6 +62,15 @@ class _ReviewMyListPageState extends State<ReviewMyListPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // 공고명 추가
+                        Text(
+                          review.jpname.isNotEmpty ? review.jpname : '(공고명 없음)',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
                             Text(
