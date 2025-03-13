@@ -37,7 +37,7 @@ class ReviewApi {
       if (eno != null) queryParams['eno'] = eno.toString();
       if (pno != null) queryParams['pno'] = pno.toString();
 
-      final uri = Uri.parse('$baseUrl/part/api/v1/employee/review/list')
+      final uri = Uri.parse('$baseUrl/employee/review/list')
           .replace(queryParameters: queryParams);
 
       print('리뷰 목록 조회 URL: $uri');
