@@ -38,12 +38,28 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
     try {
       final currentJobs = await _partTimerApi.getCurrentJobs(userProvider.pno!);
       final pastJobs = await _partTimerApi.getPastJobs(userProvider.pno!);
+      final now = DateTime.now();
 
       setState(() {
-        _currentJobs = currentJobs;
-        _pastJobs = pastJobs;
+        // 현재 근무지: 종료일이 null이거나 현재 시간 이후인 경우
+        _currentJobs = currentJobs.where((job) {
+          return job.jmendDate == null || job.jmendDate!.isAfter(now);
+        }).toList();
+
+        // 과거 근무지: 종료일이 현재 시간 이전인 경우
+        _pastJobs = pastJobs.where((job) {
+          return job.jmendDate != null && job.jmendDate!.isBefore(now);
+        }).toList();
+
         _isLoading = false;
       });
+
+      // 로그로 데이터 확인
+      print('현재 근무지: ${_currentJobs?.length}건');
+      _currentJobs?.forEach((job) => print('${job.jpname} - 종료일: ${job.jmendDate}'));
+      print('과거 근무지: ${_pastJobs?.length}건');
+      _pastJobs?.forEach((job) => print('${job.jpname} - 종료일: ${job.jmendDate}'));
+
     } catch (e) {
       print('근무지 목록 로드 중 오류 발생: $e');
       setState(() {
@@ -51,6 +67,7 @@ class _PartTimerMatchingLogsPageState extends State<PartTimerMatchingLogsPage> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
