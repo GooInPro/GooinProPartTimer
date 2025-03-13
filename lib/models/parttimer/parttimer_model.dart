@@ -8,6 +8,7 @@ class PartTimer {
   final String pdetailAddress;
   final DateTime pregdate;
   final bool pdelete;
+  final String profileImageUrl; // 프로필 이미지 URL 필드 추가
 
   PartTimer({
     required this.pno,
@@ -19,6 +20,7 @@ class PartTimer {
     required this.pdetailAddress,
     required this.pregdate,
     this.pdelete = false,
+    this.profileImageUrl = '', // 기본값 설정
   });
 
   factory PartTimer.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class PartTimer {
       pdetailAddress: json['pdetailAddress'],
       pregdate: DateTime.parse(json['pregdate']),
       pdelete: json['pdelete'] ?? false,
+      profileImageUrl: json['profileImageUrl'] ?? '', // JSON에서 이미지 URL 파싱
     );
   }
 
@@ -45,5 +48,6 @@ class PartTimer {
     'pdetailAddress': pdetailAddress,
     'pregdate': pregdate.toIso8601String(),
     'pdelete': pdelete,
+    'profileImageUrl': profileImageUrl, // 이미지 URL 추가
   };
 }

@@ -10,6 +10,8 @@ import 'package:gooinpro_parttimer/widget/parttimer_widgets/parttimer_myinfo_edi
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../providers/user_provider.dart';
+import '../../models/images/parttimer_image_model.dart';
+import '../../services/api/imageapi/parttimer_image_api.dart';
 
 class PartTimerMyInfoPage extends StatefulWidget {
   const PartTimerMyInfoPage({super.key});
@@ -22,10 +24,10 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
   final PartTimerApi _partTimerApi = PartTimerApi();
   PartTimer? _partTimer;
   bool _isLoading = true;
-  File? _selectedImage; // 선택한 이미지 파일
-  final ImagePicker _picker = ImagePicker(); // 이미지 선택기
+  File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
-  late UserProvider userProvider; // Provider
+  late UserProvider userProvider;
 
   @override
   void initState() {
@@ -42,12 +44,14 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
   Future<void> _loadPartTimerInfo() async {
     try {
       final partTimer = await _partTimerApi.getPartTimerDetail(userProvider.pno!);
+      if (!mounted) return;
       setState(() {
         _partTimer = partTimer;
         _isLoading = false;
       });
     } catch (e) {
       print('Error loading parttimer info: $e');
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -56,7 +60,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    if (pickedFile != null && mounted) {
       setState(() {
         _selectedImage = File(pickedFile.path);
       });
@@ -74,42 +78,42 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
     }
 
     try {
-      // IP 주소 오타 수정 (341 -> 34)
-      final baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'http://192.168.50.34:8085/';
-      final uploadUri = '${baseUrl}upload/api/partTimer/profile';
+      final baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'http://192.168.50.34:8085';
+      final uploadUri = Uri.parse(baseUrl).resolve('/upload/api/partTimer/profile').toString();
 
-      await FileUploadUtil.uploadFile(
+      List<String> fileNames = await FileUploadUtil.uploadFile(
         context: context,
         images: [_selectedImage!],
         uri: uploadUri,
       );
 
-      // 업로드 성공 후 위젯 상태 확인
-      if (mounted) {
-        // 사용자 정보 업데이트
-        userProvider.updateUserData(
-          userProvider.pno,
-          userProvider.pemail,
-          userProvider.pname,
-          userProvider.accessToken,
-          userProvider.refreshToken,
-        );
+      if (!mounted) return;
 
-        // 업로드 후 상태 업데이트 - 이미지가 화면에 반영되도록
-        setState(() {
-          // 필요한 상태 업데이트
-        });
-
-        // 성공 메시지 표시
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('프로필 이미지가 성공적으로 업데이트되었습니다.')),
-        );
+      if (fileNames.isEmpty) {
+        throw Exception('파일 업로드에 실패했습니다.');
       }
+
+      parttimerImage data = parttimerImage(
+          pifilename: fileNames,
+          pno: userProvider.pno!
+      );
+
+      await parttimerImageApi().addPartTimerImage(data);
+
+      if (!mounted) return;
+
+      await _loadPartTimerInfo();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('프로필 이미지가 성공적으로 업데이트되었습니다.')),
+      );
     } catch (e) {
       print('이미지 업로드 실패: $e');
-      if (mounted) {  // 여기도 mounted 체크 추가
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('이미지 업로드에 실패했습니다.')),
+          SnackBar(content: Text('이미지 업로드에 실패했습니다: $e')),
         );
       }
     }
@@ -128,7 +132,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
               userProvider.pno!,
               updatedPartTimer,
             );
-            // 수정 성공 후 정보 다시 로드
+            if (!mounted) return;
             await _loadPartTimerInfo();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -170,29 +174,34 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
       return const Center(child: Text('정보를 불러올 수 없습니다.'));
     }
 
+    print('Selected Image Path: ${_selectedImage?.path}');
+    print('Profile Image URL: ${_partTimer?.profileImageUrl}');
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          // 파란색 배경의 프로필 섹션 (이미지, 이름, 이메일, 이미지 선택/업로드 버튼 통합)
           Container(
             color: Colors.blue.shade100,
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // 프로필 이미지
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.white,
-                  backgroundImage:
-                  _selectedImage != null ? FileImage(_selectedImage!) : null,
-                  child: _selectedImage == null
+                  backgroundImage: _selectedImage != null
+                      ? FileImage(_selectedImage!)
+                      : (_partTimer?.profileImageUrl != null && _partTimer!.profileImageUrl.isNotEmpty)
+                      ? NetworkImage(Uri.parse(dotenv.env['API_UPLOAD_LOCAL_HOST']!).resolve(_partTimer!.profileImageUrl).toString())
+                      : NetworkImage("https://picsum.photos/200"),
+                  onBackgroundImageError: (exception, stackTrace) {
+                    print('Error loading image: $exception');
+                  },
+                  child: (_selectedImage == null && (_partTimer?.profileImageUrl == null || _partTimer!.profileImageUrl.isEmpty))
                       ? const Icon(Icons.person, size: 60, color: Colors.grey)
                       : null,
                 ),
                 const SizedBox(height: 16),
-
-                // 이미지 선택 및 업로드 버튼
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -217,10 +226,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
-                // 이름 및 이메일
                 Text(
                   _partTimer!.pname,
                   style: const TextStyle(
@@ -239,8 +245,6 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
               ],
             ),
           ),
-
-          // 나머지 정보 섹션
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -264,36 +268,60 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                     content: _partTimer!.pdetailAddress,
                   ),
                 const SizedBox(height: 24),
-
-                // 버튼들
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () => context.go('/parttimer/matchinglogs'),
-                      child: const Text('근무 이력 보기'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => context.go('/parttimer/matchinglogs'),
+                            child: const Text('근무 이력 보기'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => context.go('/parttimer/calendartotal'),
+                            child: const Text('급여 달력 보기'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      onPressed: () => context.go('/parttimer/calendartotal'),
-                      child: const Text('급여 달력 보기'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => context.go('/review/mylist'),
-                      child: const Text('내 리뷰 보기'),
-                      style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => context.go('/review/mylist'),
+                            child: const Text('내 리뷰 보기'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => _showEditDialog(context),
+                            child: const Text('내 정보 수정'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
-
             ),
           ),
         ],
