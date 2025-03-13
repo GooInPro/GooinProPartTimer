@@ -106,7 +106,7 @@ class _ReviewCreatePageState extends State<ReviewCreatePage> {
           SnackBar(content: Text('리뷰 제출에 실패했습니다: $e')),
         );
       }
-    } else {ㅁ
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('별점과 리뷰 내용을 모두 입력해주세요.')),
       );
