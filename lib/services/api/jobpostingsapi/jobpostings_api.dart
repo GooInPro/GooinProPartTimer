@@ -1,3 +1,4 @@
+import 'package:gooinpro_parttimer/models/jobpostings/jobpostings_image_model.dart';
 import 'package:gooinpro_parttimer/models/page/pageresponse_model.dart';
 import 'package:gooinpro_parttimer/models/worklogs/worklog_start_model.dart';
 import 'package:http/http.dart' as http;
@@ -69,6 +70,34 @@ class jobpostings_api {
       headers: {'Content-Type': 'application/json'}, // JSON 헤더 추가
       body: jsonEncode(application.toJson()), // 모델을 JSON으로 변환하여 body에 넣기
     );
+
+  }
+
+  Future<List<jobPostingsImage>> getJobPostingsImage(int jpno) async {
+
+    try{
+
+      final response = await http.get(Uri.parse('$baseUrl/jobPostingsImage/get?jpno=$jpno'));
+      final String decodedResponse = utf8.decode(response.bodyBytes);
+      final Map<String, dynamic> jsonResponse = json.decode(decodedResponse);
+
+      print(jsonResponse);
+      print('------------------- jobpostings api');
+
+      List<String> filenames = List<String>.from(jsonResponse['jpifilename']);
+      print(filenames);
+
+      List<jobPostingsImage> dataList = filenames.map((filename) => jobPostingsImage(jpifilename: filenames)).toList();
+
+      print(dataList);
+
+      return dataList;
+
+
+    } catch (e) {
+      throw Exception(e);
+    }
+
 
   }
 
