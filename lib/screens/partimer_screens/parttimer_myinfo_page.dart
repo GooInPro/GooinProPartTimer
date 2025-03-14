@@ -68,56 +68,47 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
   }
 
   Future<void> _uploadImage() async {
-    if (_selectedImage == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('이미지를 선택해주세요.')),
-        );
-      }
-      return;
-    }
+    if (_selectedImage == null) return;
 
     try {
-      final baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'http://192.168.50.34:8085';
+      // 1. 파일 업로드
+      final baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST'] ?? 'http://192.168.119.211:8085';
       final uploadUri = Uri.parse(baseUrl).resolve('/upload/api/partTimer/profile').toString();
-
       List<String> fileNames = await FileUploadUtil.uploadFile(
         context: context,
         images: [_selectedImage!],
         uri: uploadUri,
       );
 
-      if (!mounted) return;
+      if (fileNames.isEmpty) throw Exception('파일 업로드 실패');
 
-      if (fileNames.isEmpty) {
-        throw Exception('파일 업로드에 실패했습니다.');
-      }
-
+      // 2. 업로드된 파일명을 서버에 등록
       parttimerImage data = parttimerImage(
-          pifilename: fileNames,
-          pno: userProvider.pno!
+        pifilename: fileNames,
+        pno: userProvider.pno!,
       );
-
       await parttimerImageApi().addPartTimerImage(data);
 
-      if (!mounted) return;
+      // 3. 데이터 강제 갱신
+      await _loadPartTimerInfo(); // 기존 데이터 다시 로드
 
-      await _loadPartTimerInfo();
-
-      if (!mounted) return;
+      // 4. UI 상태 초기화
+      setState(() {
+        _selectedImage = null; // 선택된 이미지 초기화
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('프로필 이미지가 성공적으로 업데이트되었습니다.')),
       );
+
     } catch (e) {
       print('이미지 업로드 실패: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('이미지 업로드에 실패했습니다: $e')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('이미지 업로드 실패: $e')),
+      );
     }
   }
+
 
   Future<void> _showEditDialog(BuildContext context) async {
     if (_partTimer == null) return;
@@ -175,7 +166,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
     }
 
     print('Selected Image Path: ${_selectedImage?.path}');
-    print('Profile Image URL: ${_partTimer?.profileImageUrl}');
+    print('Profile Image URLs: ${_partTimer?.profileImageUrls}');
 
     return SingleChildScrollView(
       child: Column(
@@ -186,19 +177,26 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.white,
-                  backgroundImage: _selectedImage != null
-                      ? FileImage(_selectedImage!)
-                      : (_partTimer?.profileImageUrl != null && _partTimer!.profileImageUrl.isNotEmpty)
-                      ? NetworkImage(Uri.parse(dotenv.env['API_UPLOAD_LOCAL_HOST']!).resolve(_partTimer!.profileImageUrl).toString())
-                      : NetworkImage("https://picsum.photos/200"),
-                  onBackgroundImageError: (exception, stackTrace) {
-                    print('Error loading image: $exception');
-                  },
-                  child: (_selectedImage == null && (_partTimer?.profileImageUrl == null || _partTimer!.profileImageUrl.isEmpty))
-                      ? const Icon(Icons.person, size: 60, color: Colors.grey)
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: _partTimer != null && _partTimer!.profileImageUrls.isNotEmpty
+                        ? DecorationImage(
+                      image: NetworkImage(
+                        "${dotenv.env['API_UPLOAD_LOCAL_HOST_NGINX']}/profile/${_partTimer!.profileImageUrls.last}?v=${DateTime.now().millisecondsSinceEpoch}",
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                        : null,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: _partTimer == null || _partTimer!.profileImageUrls.isEmpty
+                      ? Center(
+                    child: Text(
+                      '등록된 프로필 사진이 없습니다',
+                      style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  )
                       : null,
                 ),
                 const SizedBox(height: 16),
