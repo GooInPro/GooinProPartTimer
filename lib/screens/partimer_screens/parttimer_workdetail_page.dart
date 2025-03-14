@@ -3,6 +3,7 @@ import 'package:gooinpro_parttimer/models/jobmatchings/jobmatchings_model.dart';
 import 'package:gooinpro_parttimer/models/salary/salary_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gooinpro_parttimer/services/api/salaryapi/salary_api.dart';
+import 'package:gooinpro_parttimer/services/api/jobMatchingsapai/jobmatchings_api.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -185,6 +186,37 @@ class _PartTimerWorkDetailPageState extends State<PartTimerWorkDetailPage> {
                 child: const Text('급여 이력'),
               ),
             ),
+
+            const SizedBox(height: 10), // 버튼 사이 간격
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final jobMatchingsApi = JobMatchingsApi();
+                    final eno = await jobMatchingsApi.getEmployerIdByJobMatchingId(widget.jobMatching.jmno);
+
+                    // mounted 체크 추가
+                    if (!mounted) return;
+
+                    // 올바른 경로로 수정 - '/review/create'로 이동
+                    print('이동할 경로: /review/create');
+                    context.go('/review/create', extra: {
+                      'eno': eno,
+                      'ename': widget.jobMatching.jpname,
+                    });
+                  } catch (e) {
+                    if (!mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('고용주 정보를 가져오는데 실패했습니다: $e')),
+                    );
+                  }
+                },
+                child: const Text('리뷰 작성'),
+              ),
+            ),
+
           ],
         ),
       ),
