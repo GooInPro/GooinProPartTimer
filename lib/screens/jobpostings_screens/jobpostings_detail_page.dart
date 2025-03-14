@@ -82,7 +82,8 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                     shape: BoxShape.circle,
                     image: imageList.isNotEmpty && imageList[0].jpifilename.isNotEmpty
                         ? DecorationImage(
-                      image: NetworkImage('${baseUrl}/jobposting/${imageList[0].jpifilename[0]}'),
+
+                      image: NetworkImage('${baseUrl}/jobPosting/${imageList[0].jpifilename[0]}'),
                       fit: BoxFit.cover,
                     )
                         : null,

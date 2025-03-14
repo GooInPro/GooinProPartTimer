@@ -70,7 +70,7 @@ class _JobPostingsState extends State<JobPostingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Job Postings')),
+      appBar: AppBar(title: const Text('구인 공고')),
       body: Center(
         child: _isLoading
             ? const CircularProgressIndicator() // 로딩 표시

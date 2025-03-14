@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class FileUploadUtil {
   static Future<List<String>> uploadFile({
@@ -9,14 +10,17 @@ class FileUploadUtil {
     required List<File> images,
     required String uri,
   }) async {
-    try {
-      // 업로드 URL 확인
-      print('Upload URI: $uri');
 
-      // MultipartRequest 생성
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(uri),
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse(uri),
+    );
+
+    for (var image in images) {
+      var imageFile = await http.MultipartFile.fromPath(
+        'files',
+        image.path,
+        contentType: MediaType('image', 'jpeg'),
       );
 
       // 파일 추가
