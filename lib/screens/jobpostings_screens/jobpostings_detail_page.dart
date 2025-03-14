@@ -23,7 +23,6 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
   jobpostings_api jopostingsapi = jobpostings_api();
   final String baseUrl = dotenv.env['API_UPLOAD_LOCAL_HOST_NGINX'] ?? 'No API host found';
 
-
   @override
   void initState() {
     super.initState();
@@ -39,7 +38,6 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
         jobDetailList = jobDetails;
         imageList = image;
         _isLoading = false;
-        // 데이터가 없으면 리스트 초기화
         workingDays = jobDetails.isNotEmpty ? JobPostingDetail.workDays(jobDetails[0].jpworkDays ?? "") : [];
         print("mounted------------------");
         print(imageList.isNotEmpty ? imageList[0].jpifilename[0] : '등록된 이미지 없음');
@@ -50,6 +48,12 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
 
   void _onApplyButtonPressed() {
     context.go('/jobposting/application/register', extra: widget.jpno);
+  }
+
+  void _onReviewButtonPressed() {
+    if (jobDetailList.isEmpty) return;
+    final eno = jobDetailList[0].eno;
+    context.go('/review/jobpostings/$eno');
   }
 
   @override
@@ -71,37 +75,37 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
             child: ListView(
               padding: EdgeInsets.all(16.0),
               children: [
-                // 배너 이미지
                 Container(
+                  width: 200,
                   height: 200,
                   decoration: BoxDecoration(
+                    shape: BoxShape.circle,
                     image: imageList.isNotEmpty && imageList[0].jpifilename.isNotEmpty
                         ? DecorationImage(
-                      image: NetworkImage('${baseUrl}/${imageList[0].jpifilename[0]}'),
+                      image: NetworkImage('${baseUrl}/jobposting/${imageList[0].jpifilename[0]}'),
                       fit: BoxFit.cover,
                     )
                         : null,
-                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: imageList.isEmpty || imageList[0].jpifilename.isEmpty
                       ? Center(
                     child: Text(
                       '등록된 사진이 없습니다',
-                      style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   )
                       : null,
                 ),
                 SizedBox(height: 16),
-
-                // 공고 제목
                 Text(
                   jobDetailList[0].jpname ?? "제목 없음",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
-
-                // 위치 정보
                 Row(
                   children: [
                     Icon(Icons.location_on, color: Colors.grey),
@@ -116,8 +120,6 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                   ],
                 ),
                 Divider(height: 24, thickness: 1),
-
-                // 급여 정보
                 _buildInfoRow(Icons.attach_money, "시급: ${jobDetailList[0].jphourlyRate}원"),
                 _buildInfoRow(Icons.calendar_today, "근무요일: ${workingDays.isEmpty ? '정보 없음' : workingDays.join(', ')}"),
                 _buildInfoRow(Icons.date_range, "마감일: ${jobDetailList[0].jpenddate ?? '정보 없음'}"),
@@ -126,17 +128,33 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
               ],
             ),
           ),
-
-          // 지원 버튼 (화면 아래 고정)
+          // 리뷰 보기 버튼
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0),
+            child: ElevatedButton(
+              onPressed: _onReviewButtonPressed,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                backgroundColor: Colors.green,
+                minimumSize: Size(double.infinity, 56),
+              ),
+              child: Text(
+                '리뷰 보기',
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          // 지원 버튼
           Padding(
             padding: EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: _onApplyButtonPressed,
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24), // 내부 패딩 증가
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 backgroundColor: Colors.blue,
-                minimumSize: Size(double.infinity, 56), // 최소 크기 설정 (가로: 꽉 채움, 세로: 56)
+                minimumSize: Size(double.infinity, 56),
               ),
               child: Text(
                 '지원서 작성하기',

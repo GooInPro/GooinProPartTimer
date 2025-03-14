@@ -54,6 +54,7 @@ class JobPostingDetail {
   final String? jpenddate;
   final TimeOfDay jpworkStartTime;
   final TimeOfDay jpworkEndTime;
+  final int eno; // 고용주 ID 추가
 
   JobPostingDetail({
     required this.jpno,
@@ -65,6 +66,7 @@ class JobPostingDetail {
     this.jpenddate,
     required this.jpworkStartTime,
     required this.jpworkEndTime,
+    required this.eno, // 생성자에 추가
   });
 
   factory JobPostingDetail.fromJson(Map<String, dynamic> json) {
@@ -78,15 +80,16 @@ class JobPostingDetail {
       jpenddate: json['jpenddate'],
       jpworkStartTime: _parseTime(json['jpworkStartTime']),
       jpworkEndTime: _parseTime(json['jpworkEndTime']),
+      eno: json['eno'] ?? 0, // JSON 파싱에 추가
     );
   }
 
   static TimeOfDay _parseTime(String timeString) {
-      final parts = timeString.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-      return TimeOfDay(hour: hour, minute: minute);
-    }
+    final parts = timeString.split(':');
+    final hour = int.parse(parts[0]);
+    final minute = int.parse(parts[1]);
+    return TimeOfDay(hour: hour, minute: minute);
+  }
 
   static List<String> workDays(String jpworkDays) {
     List<String> days = [];
@@ -104,4 +107,3 @@ class JobPostingDetail {
     return days;
   }
 }
-
