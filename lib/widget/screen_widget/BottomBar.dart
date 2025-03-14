@@ -31,10 +31,10 @@ class BottomBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.work), label: 'JobPosting'),
-        BottomNavigationBarItem(icon: Icon(Icons.access_time), label: 'In-Out'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chatting'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        BottomNavigationBarItem(icon: Icon(Icons.work), label: '구인공고'),
+        BottomNavigationBarItem(icon: Icon(Icons.access_time), label: '내 근무'),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: '채팅'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: '내 정보'),
       ],
       selectedItemColor: Colors.blue, // 선택된 항목의 색상
       unselectedItemColor: Colors.grey, // 선택되지 않은 항목의 색상

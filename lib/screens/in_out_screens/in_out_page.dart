@@ -182,7 +182,6 @@ class _InOutPageState extends State<InOutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("출퇴근"),
-        backgroundColor: Colors.blueAccent,
       ),
       body: workTimes == null
           ? Center(child: CircularProgressIndicator()) // 데이터가 로딩 중일 때 표시

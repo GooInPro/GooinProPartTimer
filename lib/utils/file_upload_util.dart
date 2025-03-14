@@ -2,6 +2,7 @@ import 'dart:convert'; // ✅ JSON 디코딩을 위해 추가
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class FileUploadUtil {
   static Future<List<String>> uploadFile({
@@ -18,6 +19,7 @@ class FileUploadUtil {
       var imageFile = await http.MultipartFile.fromPath(
         'files',
         image.path,
+        contentType: MediaType('image', 'jpeg'),
       );
       request.files.add(imageFile);
     }

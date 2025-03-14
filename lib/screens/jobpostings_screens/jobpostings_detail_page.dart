@@ -77,7 +77,7 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                   decoration: BoxDecoration(
                     image: imageList.isNotEmpty && imageList[0].jpifilename.isNotEmpty
                         ? DecorationImage(
-                      image: NetworkImage('${baseUrl}/${imageList[0].jpifilename[0]}'),
+                      image: NetworkImage('${baseUrl}/jobPosting/${imageList[0].jpifilename[0]}'),
                       fit: BoxFit.cover,
                     )
                         : null,

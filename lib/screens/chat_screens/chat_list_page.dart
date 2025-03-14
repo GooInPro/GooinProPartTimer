@@ -52,12 +52,9 @@ class _ChatListPageState extends State<ChatListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100], // 배경색 변경
+    return Scaffold(// 배경색 변경
       appBar: AppBar(
-        title: Text("채팅방 목록", style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        title: Text("채팅방 목록"),
         elevation: 1,
       ),
       body: isLoading
