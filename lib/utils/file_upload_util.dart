@@ -1,4 +1,4 @@
-import 'dart:convert'; //  JSON 디코딩을 위해 추가
+import 'dart:convert'; // ✅ JSON 디코딩을 위해 추가
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +31,7 @@ class FileUploadUtil {
       print('File upload Successful: ${responseData.body}');
 
       try {
-        //  JSON 배열 형태로 디코딩
+        // ✅ JSON 배열 형태로 디코딩
         List<String> fileNames = List<String>.from(
             jsonDecode(responseData.body));
 
