@@ -15,6 +15,7 @@ import '../../models/images/parttimer_image_model.dart';
 import '../../models/login/login_register_model.dart';
 import '../../models/login/login_response_model.dart';
 import '../../providers/user_provider.dart';
+import '../../services/api/fcmapi/fcm_api.dart';
 import '../../services/api/imageapi/parttimer_document_image_api.dart';
 import '../../services/api/imageapi/parttimer_image_api.dart';
 
@@ -34,6 +35,8 @@ class _RegisterPageState extends State<RegisterPage> {
   parttimerImageApi imageApi = parttimerImageApi();
   parttimerDocumentImageApi documentApi = parttimerDocumentImageApi();
 
+  String? fcmToken = FirebaseApi().fcmToken;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
       pgender: true,
       proadAddress: '',
       pdetailAddress: '',
+      ptoken: fcmToken,
     );
 
     _birthController.text = formatDate(registerData.pbirth);

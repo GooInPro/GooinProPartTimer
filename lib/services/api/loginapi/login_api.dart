@@ -18,6 +18,7 @@ class login_api {
     try {
       final response = await http.put(
         url, // 객체를 JSON으로 변환
+        headers: {'Content-Type': 'application/json'}, // JSON 헤더 추가
         body: jsonEncode(login.toJson()),
       );
 

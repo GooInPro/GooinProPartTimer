@@ -47,9 +47,6 @@ class _KakaoRedirectPageState extends State<KakaoRedirectPage> {
       print(response.pname);
       print(response.newUser);
 
-      print("==============");
-      print(loginuser.ptoken);
-
       if(response.newUser == true){
         loginProvider.registerUserData(loginuser.pemail, loginuser.pname);
         context.go('/register');

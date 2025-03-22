@@ -5,6 +5,7 @@ class LoginRegister {
   bool pgender;
   String? proadAddress;
   String? pdetailAddress;
+  String? ptoken;
 
   LoginRegister({
     required this.pemail,
@@ -13,6 +14,7 @@ class LoginRegister {
     required this.pgender,
     this.proadAddress,
     this.pdetailAddress,
+    this.ptoken,
   });
 
   // JSON 데이터를 객체로 변환하는 생성자
@@ -24,6 +26,7 @@ class LoginRegister {
       pgender: json['pgender'] ?? true,
       proadAddress: json['proadAddress'] ?? null,
       pdetailAddress: json['pdetailAddress'] ?? null,
+      ptoken: json['ptoken'] ?? null,
     );
   }
 
@@ -34,6 +37,7 @@ class LoginRegister {
     'pbirth': pbirth.toIso8601String(),
     'pgender' : pgender,
     'proadAddress' : proadAddress,
-    'pdetailAddress': pdetailAddress
+    'pdetailAddress': pdetailAddress,
+    'ptoken': ptoken,
   };
 }
