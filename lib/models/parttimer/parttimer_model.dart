@@ -8,6 +8,7 @@ class PartTimer {
   final String pdetailAddress;
   final DateTime pregdate;
   final bool pdelete;
+  final List<String> profileImageUrls;
 
   PartTimer({
     required this.pno,
@@ -19,7 +20,35 @@ class PartTimer {
     required this.pdetailAddress,
     required this.pregdate,
     this.pdelete = false,
+    this.profileImageUrls = const [],
   });
+
+  // copyWith 메서드 추가 (모든 필드 포함)
+  PartTimer copyWith({
+    int? pno,
+    String? pemail,
+    String? pname,
+    DateTime? pbirth,
+    bool? pgender,
+    String? proadAddress,
+    String? pdetailAddress,
+    DateTime? pregdate,
+    bool? pdelete,
+    List<String>? profileImageUrls,
+  }) {
+    return PartTimer(
+      pno: pno ?? this.pno,
+      pemail: pemail ?? this.pemail,
+      pname: pname ?? this.pname,
+      pbirth: pbirth ?? this.pbirth,
+      pgender: pgender ?? this.pgender,
+      proadAddress: proadAddress ?? this.proadAddress,
+      pdetailAddress: pdetailAddress ?? this.pdetailAddress,
+      pregdate: pregdate ?? this.pregdate,
+      pdelete: pdelete ?? this.pdelete,
+      profileImageUrls: profileImageUrls ?? this.profileImageUrls,
+    );
+  }
 
   factory PartTimer.fromJson(Map<String, dynamic> json) {
     return PartTimer(
@@ -32,6 +61,7 @@ class PartTimer {
       pdetailAddress: json['pdetailAddress'],
       pregdate: DateTime.parse(json['pregdate']),
       pdelete: json['pdelete'] ?? false,
+      profileImageUrls: List<String>.from(json['profileImageUrls'] ?? []),
     );
   }
 
@@ -45,5 +75,6 @@ class PartTimer {
     'pdetailAddress': pdetailAddress,
     'pregdate': pregdate.toIso8601String(),
     'pdelete': pdelete,
+    'profileImageUrls': profileImageUrls,
   };
 }

@@ -57,8 +57,7 @@ class _InOutWorkListPageState extends State<InOutWorkListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Work List'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('내 근무'),
       ),
       body: workList.isEmpty
           ? Center(child: Text("현재 근무중인 알바가 없습니다."),) // 로딩 중일 때 표시

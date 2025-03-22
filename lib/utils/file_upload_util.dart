@@ -2,6 +2,7 @@ import 'dart:convert'; // ✅ JSON 디코딩을 위해 추가
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class FileUploadUtil {
   static Future<List<String>> uploadFile({
@@ -18,6 +19,7 @@ class FileUploadUtil {
       var imageFile = await http.MultipartFile.fromPath(
         'files',
         image.path,
+        contentType: MediaType('image', 'jpeg'),
       );
       request.files.add(imageFile);
     }
@@ -30,7 +32,8 @@ class FileUploadUtil {
 
       try {
         // ✅ JSON 배열 형태로 디코딩
-        List<String> fileNames = List<String>.from(jsonDecode(responseData.body));
+        List<String> fileNames = List<String>.from(
+            jsonDecode(responseData.body));
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Upload successful: ${fileNames.join(", ")}')),
