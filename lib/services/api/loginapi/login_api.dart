@@ -10,15 +10,15 @@ class login_api {
   final String baseUrl = dotenv.env['API_HOST'] ?? 'No API host found';
 
   Future<LoginResponse> LoginDataSend(Login login) async {
-    final String email = login.pemail;
-    print("login api login data send --------------------------");
-    print(email);
 
-    final url = Uri.parse('$baseUrl/login/find/$email');
+    print("login api login data send --------------------------");
+
+    final url = Uri.parse('$baseUrl/login/find');
 
     try {
-      final response = await http.get(
+      final response = await http.put(
         url, // 객체를 JSON으로 변환
+        body: jsonEncode(login.toJson()),
       );
 
       if (response.statusCode == 200) {

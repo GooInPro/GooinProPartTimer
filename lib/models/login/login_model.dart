@@ -1,10 +1,12 @@
 class Login {
   final String pemail;
   final String pname;
+  late String? ptoken;
 
   Login({
     required this.pemail,
     required this.pname,
+    this.ptoken,
   });
 
   // JSON 데이터를 객체로 변환하는 생성자
@@ -12,6 +14,7 @@ class Login {
     return Login(
       pemail: json['pemail'] ?? '', // null 값 방지
       pname: json['pname'] ?? '',
+      ptoken: json['ptoken'] ?? '',
     );
   }
 
@@ -19,5 +22,6 @@ class Login {
   Map<String, dynamic> toJson() => {
     'pemail': pemail,
     'pname': pname,
+    'ptoken': ptoken,
   };
 }

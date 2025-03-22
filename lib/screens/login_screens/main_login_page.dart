@@ -5,6 +5,7 @@ import 'package:gooinpro_parttimer/services/api/loginapi/naver_api.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 import '../../models/login/login_model.dart';
+import '../../services/api/fcmapi/fcm_api.dart';
 import '../../services/api/loginapi/kakao_api.dart';
 
 class MainLoginPage extends StatefulWidget {
@@ -18,6 +19,8 @@ class _MainLoginPageState extends State<MainLoginPage> {
 
   final naver_api naverLoginApi = naver_api();
 
+  String? fcmToken = FirebaseApi().fcmToken;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +30,8 @@ class _MainLoginPageState extends State<MainLoginPage> {
   void handleKakaoLogin() async {
       Login? loginuser = await kakaoLoginApi.kakaoLogin();
       if(loginuser != null) {
+
+        loginuser.ptoken = fcmToken;
         context.go('/login/kakaore', extra: loginuser);
       } else {
         print("main login page - 로그인 실패");
@@ -39,6 +44,8 @@ class _MainLoginPageState extends State<MainLoginPage> {
     Login? loginuser = await naverLoginApi.naverLogin();
 
     if(loginuser != null) {
+
+      loginuser.ptoken = fcmToken;
       context.go('/login/naverre', extra: loginuser);
     } else {
       print("main login page - 로그인 실패");

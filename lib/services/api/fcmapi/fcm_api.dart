@@ -1,31 +1,28 @@
-
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseApi {
-  // Firebase Messaging 인스턴스 생성
-  final _firebaseMessaging = FirebaseMessaging.instance;
+  static final FirebaseApi _instance = FirebaseApi._internal();
+  factory FirebaseApi() => _instance;
+  FirebaseApi._internal();
 
-  // Flutter Local Notifications 인스턴스 생성
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-  // 알림 초기화
-  Future<void> initNotifications() async {
+  String? _fcmToken;
+  String? get fcmToken => _fcmToken;
 
-    // 사용자에게 알림 권한 요청
+  Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission(
       badge: true,
       alert: true,
       sound: true,
     );
 
-    // FCM 토큰 가져오기 (서버로 보내야 함)
-    final fcmToken = await _firebaseMessaging.getToken();
-    print('📌 FCM Token: $fcmToken');
+    _fcmToken = await _firebaseMessaging.getToken();
+    print('📌 FCM Token: $_fcmToken');
 
-    // 로컬 알림 설정
     const AndroidInitializationSettings androidInitializationSettings =
     AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -34,19 +31,18 @@ class FirebaseApi {
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    // 포그라운드에서 FCM 알림 처리
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("📩 포그라운드 알림 수신: ${message.notification?.title} - ${message.notification?.body}");
+      print(
+          "📩 포그라운드 알림 수신: ${message.notification?.title} - ${message.notification?.body}");
       _showNotification(message);
     });
   }
 
-  // 푸시 알림 표시 함수
   void _showNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'high_importance_channel', // 채널 ID
-      'High Importance Notifications', // 채널 이름
+      'high_importance_channel',
+      'High Importance Notifications',
       channelDescription: 'This channel is used for important notifications.',
       importance: Importance.max,
       priority: Priority.high,
@@ -56,9 +52,9 @@ class FirebaseApi {
     NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await _flutterLocalNotificationsPlugin.show(
-      0, // 알림 ID
-      message.notification?.title, // 알림 제목
-      message.notification?.body, // 알림 내용
+      0,
+      message.notification?.title,
+      message.notification?.body,
       platformChannelSpecifics,
     );
   }
