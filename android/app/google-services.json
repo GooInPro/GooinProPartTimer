@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "502361416132",
-    "project_id": "gooinpro-acccc",
-    "storage_bucket": "gooinpro-acccc.firebasestorage.app"
+    "project_number": "667188401130",
+    "project_id": "gooinpro-beae2",
+    "storage_bucket": "gooinpro-beae2.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:502361416132:android:9057451e49bd8bdf580491",
+        "mobilesdk_app_id": "1:667188401130:android:b9b77c81c44ea925781893",
         "android_client_info": {
           "package_name": "org.gooinpro.gooinpro_parttimer"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCpVma0Wv8krmI9Pkt8OsJy1fgrQ89-wHg"
+          "current_key": "AIzaSyDBOWU6L9SgF-nfw_WZ7zN6LMQoC0ogCgM"
         }
       ],
       "services": {
