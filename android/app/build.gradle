@@ -1,8 +1,12 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+
+    //FCM
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -13,6 +17,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
+        coreLibraryDesugaringEnabled true // Java 8+ 기능 지원 활성화
     }
 
     kotlinOptions {
@@ -42,6 +48,8 @@ android {
         // ✅ .env에서 Kakao 앱 키 가져와서 BuildConfig에 추가
         def kakaoNativeKey = env.getProperty("KAKAO_NATIVE_KEY", "")
         resValue "string", "KAKAO_NATIVE_KEY", kakaoNativeKey
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -51,6 +59,19 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+}
+
+dependencies {
+//     Firebase BOM (Bill of Materials) 사용, Firebase 라이브러리 버전 자동 관리
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')  // Firebase BOM 추가
+
+    // FCM SDK 추가
+    implementation 'com.google.firebase:firebase-messaging'  // Firebase Cloud Messaging SDK
+
+    implementation "androidx.core:core-ktx:1.10.1"
+
+    // coreLibraryDesugaring 추가 (필수)
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
 
 flutter {
