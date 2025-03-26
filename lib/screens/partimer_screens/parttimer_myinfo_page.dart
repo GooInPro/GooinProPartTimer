@@ -180,6 +180,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
+                    shape: BoxShape.circle,
                     image: _partTimer != null && _partTimer!.profileImageUrls.isNotEmpty
                         ? DecorationImage(
                       image: NetworkImage(
