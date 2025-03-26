@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gooinpro_parttimer/providers/user_provider.dart';
 import 'package:gooinpro_parttimer/routes/app_router.dart';
+import 'package:gooinpro_parttimer/services/api/fcmapi/fcm_api.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
-
-import 'config/firebase_api.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  // Flutter 엔진 초기화
@@ -27,12 +25,12 @@ void main() async{
     javaScriptAppKey: javascriptAppKey
   );
 
+
+  print("main --------------");
+
   await Firebase.initializeApp();
   await FirebaseApi().initNotifications();
 
-
-
-  print("main --------------");
   print(apiHost);
 
   runApp(

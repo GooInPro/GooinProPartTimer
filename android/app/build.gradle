@@ -1,8 +1,12 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    id 'com.google.gms.google-services' // Firebase 설정
+
+    //FCM
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -13,7 +17,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-        coreLibraryDesugaringEnabled true // ✅ Java 8+ 기능 지원 활성화
+
+        coreLibraryDesugaringEnabled true // Java 8+ 기능 지원 활성화
     }
 
     kotlinOptions {
@@ -25,7 +30,10 @@ android {
     }
 
     defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "org.gooinpro.gooinpro_parttimer"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -40,22 +48,32 @@ android {
         // ✅ .env에서 Kakao 앱 키 가져와서 BuildConfig에 추가
         def kakaoNativeKey = env.getProperty("KAKAO_NATIVE_KEY", "")
         resValue "string", "KAKAO_NATIVE_KEY", kakaoNativeKey
+
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
 }
 
-flutter {
-    source = "../.."
-}
-
 dependencies {
+//     Firebase BOM (Bill of Materials) 사용, Firebase 라이브러리 버전 자동 관리
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')  // Firebase BOM 추가
+
+    // FCM SDK 추가
+    implementation 'com.google.firebase:firebase-messaging'  // Firebase Cloud Messaging SDK
+
     implementation "androidx.core:core-ktx:1.10.1"
 
-    // ✅ coreLibraryDesugaring 추가 (필수)
+    // coreLibraryDesugaring 추가 (필수)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+}
+
+flutter {
+    source = "../.."
 }
