@@ -167,6 +167,8 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
 
     print('Selected Image Path: ${_selectedImage?.path}');
     print('Profile Image URLs: ${_partTimer?.profileImageUrls}');
+    print("==========");
+    print( "${dotenv.env['API_UPLOAD_LOCAL_HOST_NGINX']}/profile/${_partTimer!.profileImageUrls.last}?v=${DateTime.now().millisecondsSinceEpoch}");
 
     return SingleChildScrollView(
       child: Column(
@@ -179,6 +181,7 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
               children: [
                 Container(
                   height: 200,
+                  width: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: _partTimer != null && _partTimer!.profileImageUrls.isNotEmpty
@@ -189,7 +192,6 @@ class _PartTimerMyInfoPageState extends State<PartTimerMyInfoPage> {
                       fit: BoxFit.cover,
                     )
                         : null,
-                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: _partTimer == null || _partTimer!.profileImageUrls.isEmpty
                       ? Center(
