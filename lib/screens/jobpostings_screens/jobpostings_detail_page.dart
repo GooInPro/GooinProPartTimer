@@ -79,7 +79,7 @@ class _JobPostingDetailState extends State<JobPostingDetailPage> {
                   width: 200,
                   height: 200,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: BoxShape.rectangle,
                     image: imageList.isNotEmpty && imageList[0].jpifilename.isNotEmpty
                         ? DecorationImage(
 
